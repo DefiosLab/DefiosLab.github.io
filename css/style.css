@@ -1,0 +1,22 @@
+body { 
+	visibility: hidden 
+}
+
+.navmargin {
+	margin-top: 2em;
+}
+
+h2 {
+    white-space: normal;
+}
+
+.post__thumbnail {
+	max-width: 128px;
+	margin: 0 0 20px;
+	margin-bottom: 0 0 1.25rem;
+	border: 0;
+}
+
+.post__thumbnail img {
+	width: 100%;
+}

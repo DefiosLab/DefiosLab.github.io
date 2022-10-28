@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Defios Lab.</title>
+    <link>https://DefiosLab.github.io/</link>
+    <description>Recent content on Defios Lab.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>jp</language><atom:link href="https://DefiosLab.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://DefiosLab.github.io/about/</link>
+      <pubDate>Sat, 01 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/about/</guid>
+      <description>このブログは、Defios株式会社の様々な 挑戦~Defio~ の記録を書いているブログです。
+と、かっこよくTopには書きましたが&amp;hellip;
+普段AIやIoT関係の開発を行う弊社の社員が、技術から遊び、岩手での仕事の様子などあらゆるテーマについて自由に書く何でもブログです。
+記事についてのコメントは#Defios_Labのハッシュタグで、TwitterやFacebookに投稿してもらえると嬉しいです。
+― DefiosLab 所長 竹田 大将
+This blog is written by an employee of Defios Corporation, an IT company that develops AI and IoT.
+I write articles mainly about technology.
+I also write articles about Iwate Prefecture in Japan, where the company&amp;rsquo;s office is located.
+― Director of DefiosLaboratory Takeda Hiromasa</description>
+    </item>
+    
+  </channel>
+</rss>
