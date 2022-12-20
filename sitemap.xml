@@ -3,12 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://DefiosLab.github.io/</loc>
-    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://DefiosLab.github.io/archives/</loc>
-    <lastmod>2022-11-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://DefiosLab.github.io/post/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/categories/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/categories/iot/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/tags/m5stack/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/post/remote_contoroller_mqtt/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/tags/mqtt/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/tags/</loc>
+    <lastmod>2022-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://DefiosLab.github.io/archives/</loc>
     <lastmod>2022-11-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://DefiosLab.github.io/post/about/</loc>
@@ -16,9 +34,5 @@
   </url><url>
     <loc>https://DefiosLab.github.io/about/</loc>
     <lastmod>2022-10-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://DefiosLab.github.io/categories/</loc>
-  </url><url>
-    <loc>https://DefiosLab.github.io/tags/</loc>
   </url>
 </urlset>

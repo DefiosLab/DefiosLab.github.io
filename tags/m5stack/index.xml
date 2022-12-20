@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>M5Stack on Defios Lab.</title>
+    <link>https://DefiosLab.github.io/tags/m5stack/</link>
+    <description>Recent content in M5Stack on Defios Lab.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>jp</language>
+    <lastBuildDate>Tue, 20 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/m5stack/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>M5Stackで始めるIoT開発入門〜学習リモコン〜</title>
+      <link>https://DefiosLab.github.io/post/remote_contoroller_mqtt/</link>
+      <pubDate>Tue, 20 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/post/remote_contoroller_mqtt/</guid>
+      <description>1．はじめに 本記事は、IoT開発初心者である私がM5Stackで学習リモコンを作成し、ネットワーク経由で家電を操作してみようという内容です。
+M5StackはWi-FiとBluetoothによる無線通信機能を備えたESP32や液晶ディスプレイ、microSDカードスロットなどの周辺機器がまとまった小型のマイコンモジュールです。ユニット(センサーなど)を接続することで簡単にセンサーから値を取得できます。この記事を通して、M5Stackでの開発やMQTTなど基本的なIoT開発の仕方を勉強するきっかけや参考になればいいと思います。
+2．開発環境と構成図 今回作成するシステムの構成図はこんな感じです。ただ、学習リモコンを作るだけではIoTにはならないので、ネットワーク経由でも操作できるようにしました。IoTでの通信といえばMQTTと聞いたので勉強も兼ねて実装していきたいと思います。
+開発環境は以下の通りです。M5GO IoTスターターキットを購入すれば、IRセンサーの他にENVⅢ(温湿度・気圧)センサーなども付いてくるので初めてIoT開発する方にはおすすめです。前提として、Arduino IDEでのM5Stackの環境は整っていることとします。
+端末：M5GO (M5STACK BASICでもOK) センサー：IRセンサー(赤外線センサー) サーバー：Raspberry Pi 4 (Linuxの入ったPCなら代替可) 3．学習リモコン作成 3.1．準備 最初に学習リモコンから作成していきたいと思います。まずは、IRremoteESP8266のライブラリをインストールします。
+3.2．受信編 次に既存のリモコンから赤外線データを取得します。今回私は、電気をON・OFFするこちらのアイリスオオヤマ製のリモコンを使用します。
+まずは、IRremoteESP8266のサンプルコードを取得します。 赤外線を受信するサンプルコードは、「ファイル」→「スケッチ例」→「IRremoteESP8266」の「IRrecvDumpV2」から取得できます。
+M5GOでは、受信するPIN番号が36、送信するPIN番号が26番です。なので、受信するPIN番号を36に変更する必要があります。
+const uint16_t kRecvPin = 36; 変更したら、コンパイル＋書き込みを行い、シリアルモニターを開いてIRセンサーに向けてリモコンのボタンを押しデータ受信させます。今回は「ON・OFF」、「明るく」、「暗い」のデータを受信します。赤外線データを受信すると以下のようなにシリアルモニタに表示されるのでuint16_t raw_data[85]のメモを取ります。 3.3．送信編 赤外線データを受信したら、次に学習リモコンを作成します。現時点では、Web UIやMQTTの実装はしていないので、ボタンが押された場合データを送信するように実装します。 Aボタンが「切/入」、Bボタンが「明るく」、Cボタンが「暗く」のデータを送信するように実装していきます。 コードについては、コード内にコメントを書いたので説明は省略します。コンパイル＋書き込みを行い、実際に家電(今回は電気)を操作できたら学習リモコンは完成です！
+#include &amp;lt;M5Stack.h&amp;gt; #include &amp;lt;IRremoteESP8266.h&amp;gt; #include &amp;lt;IRsend.h&amp;gt; #define DATA_SIZE 85 // 送信する赤外線データのサイズ #define TRANSMIT_CAPTURE_SIZE 38 // 周波数. 赤外線リモコンの仕様が38khzなので、38で固定 int ir_send_pin = 26; // 送信するPIN番号 IRsend irsend(ir_send_pin); // 送信する赤外線データ uint16_t on_off[85] = {2022, 1004, 5584,... , 1494, 532, 512}; // 切/入 uint16_t brightly[85] = {2050, 978, 5586,.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -5,6 +5,16 @@
     <link>https://DefiosLab.github.io/categories/</link>
     <description>Recent content in Categories on Defios Lab.</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>jp</language><atom:link href="https://DefiosLab.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>jp</language>
+    <lastBuildDate>Tue, 20 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IoT</title>
+      <link>https://DefiosLab.github.io/categories/iot/</link>
+      <pubDate>Tue, 20 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/categories/iot/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

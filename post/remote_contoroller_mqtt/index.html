@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io">
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>M5Stackで始めるIoT開発入門〜学習リモコン〜 - Tue, Dec 20, 2022</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 平山快</p>
+    
+
+    
+    <p class="lead">M5Stack &#43; MQTT &#43; IRセンサーで学習リモコンの作成</p>
+    
+
+    <h1 id="1はじめに">1．はじめに</h1>
+<p>本記事は、IoT開発初心者である私が<strong>M5Stackで学習リモコンを作成し、ネットワーク経由で家電を操作してみよう</strong>という内容です。</p>
+<p>M5StackはWi-FiとBluetoothによる無線通信機能を備えたESP32や液晶ディスプレイ、microSDカードスロットなどの周辺機器がまとまった小型のマイコンモジュールです。ユニット(センサーなど)を接続することで簡単にセンサーから値を取得できます。この記事を通して、M5Stackでの開発やMQTTなど基本的なIoT開発の仕方を勉強するきっかけや参考になればいいと思います。</p>
+<hr>
+<h1 id="2開発環境と構成図">2．開発環境と構成図</h1>
+<p>今回作成するシステムの構成図はこんな感じです。ただ、学習リモコンを作るだけではIoTにはならないので、ネットワーク経由でも操作できるようにしました。IoTでの通信といえばMQTTと聞いたので勉強も兼ねて実装していきたいと思います。</p>
+<figure><img src="IoT_system.png"
+         alt="システム構成図" width="800px"/>
+</figure>
+
+<p>開発環境は以下の通りです。M5GO IoTスターターキットを購入すれば、IRセンサーの他にENVⅢ(温湿度・気圧)センサーなども付いてくるので初めてIoT開発する方にはおすすめです。前提として、Arduino IDEでのM5Stackの環境は整っていることとします。</p>
+<ul>
+<li>端末：M5GO (M5STACK BASICでもOK)</li>
+<li>センサー：IRセンサー(赤外線センサー)</li>
+<li>サーバー：Raspberry Pi 4 (Linuxの入ったPCなら代替可)</li>
+</ul>
+<hr>
+<h1 id="3学習リモコン作成">3．学習リモコン作成</h1>
+<h2 id="31準備">3.1．準備</h2>
+<p>最初に学習リモコンから作成していきたいと思います。まずは、<code>IRremoteESP8266</code>のライブラリをインストールします。</p>
+<h2 id="32受信編">3.2．受信編</h2>
+<p>次に既存のリモコンから赤外線データを取得します。今回私は、電気をON・OFFするこちらのアイリスオオヤマ製のリモコンを使用します。</p>
+<figure><img src="IRIS.png"
+         alt="システム構成図" width="300px"/>
+</figure>
+
+<p>まずは、<code>IRremoteESP8266</code>のサンプルコードを取得します。
+赤外線を受信するサンプルコードは、「ファイル」→「スケッチ例」→「IRremoteESP8266」の「IRrecvDumpV2」から取得できます。</p>
+<figure><img src="dump_sample.png"
+         alt="サンプルコード取得" width="800px"/>
+</figure>
+
+<p>M5GOでは、受信するPIN番号が36、送信するPIN番号が26番です。なので、受信するPIN番号を36に変更する必要があります。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">uint16_t</span> kRecvPin <span style="color:#f92672">=</span> <span style="color:#ae81ff">36</span>;
+</span></span></code></pre></div><p>変更したら、コンパイル＋書き込みを行い、シリアルモニターを開いてIRセンサーに向けてリモコンのボタンを押しデータ受信させます。今回は「ON・OFF」、「明るく」、「暗い」のデータを受信します。赤外線データを受信すると以下のようなにシリアルモニタに表示されるので<code>uint16_t raw_data[85]</code>のメモを取ります。
+<figure><img src="dump_result.png"
+         alt="受信結果" width="800px"/>
+</figure>
+</p>
+<h2 id="33送信編">3.3．送信編</h2>
+<p>赤外線データを受信したら、次に学習リモコンを作成します。現時点では、Web UIやMQTTの実装はしていないので、ボタンが押された場合データを送信するように実装します。
+Aボタンが「切/入」、Bボタンが「明るく」、Cボタンが「暗く」のデータを送信するように実装していきます。
+コードについては、コード内にコメントを書いたので説明は省略します。コンパイル＋書き込みを行い、実際に家電(今回は電気)を操作できたら学習リモコンは完成です！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;M5Stack.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;IRremoteESP8266.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;IRsend.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define DATA_SIZE 85 </span><span style="color:#75715e">// 送信する赤外線データのサイズ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define TRANSMIT_CAPTURE_SIZE 38 </span><span style="color:#75715e">// 周波数. 赤外線リモコンの仕様が38khzなので、38で固定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> ir_send_pin <span style="color:#f92672">=</span> <span style="color:#ae81ff">26</span>; <span style="color:#75715e">// 送信するPIN番号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>IRsend <span style="color:#a6e22e">irsend</span>(ir_send_pin);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 送信する赤外線データ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> on_off[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2022</span>, <span style="color:#ae81ff">1004</span>,  <span style="color:#ae81ff">5584</span>,... , <span style="color:#ae81ff">1494</span>, <span style="color:#ae81ff">532</span>,  <span style="color:#ae81ff">512</span>};  <span style="color:#75715e">// 切/入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> brightly[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2050</span>, <span style="color:#ae81ff">978</span>,  <span style="color:#ae81ff">5586</span>,...,  <span style="color:#ae81ff">1550</span>, <span style="color:#ae81ff">480</span>,  <span style="color:#ae81ff">508</span>};  <span style="color:#75715e">// 明るく
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> dark[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2020</span>, <span style="color:#ae81ff">1006</span>,  <span style="color:#ae81ff">5578</span>,...,  <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">516</span>,  <span style="color:#ae81ff">536</span>};  <span style="color:#75715e">// 暗く
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// M5Stackの初期化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  M5.begin();
+</span></span><span style="display:flex;"><span>  M5.Power.begin();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 26番ピンの設定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  pinMode(ir_send_pin, OUTPUT);
+</span></span><span style="display:flex;"><span>  digitalWrite(ir_send_pin, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loop</span>() {
+</span></span><span style="display:flex;"><span>  M5.update();
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 各ボタンが押された際に、それぞれの赤外線データを送信する
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (M5.BtnA.wasPressed()) {
+</span></span><span style="display:flex;"><span>    irsend.sendRaw(on_off, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnB.wasPressed()) {
+</span></span><span style="display:flex;"><span>    irsend.sendRaw(brightly, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnC.wasPressed()) {
+</span></span><span style="display:flex;"><span>    irsend.sendRaw(dark, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h1 id="4mqtt">4．MQTT</h1>
+<p>MQTT(Message Queue Telemetry Transport)とは、IoT向けのメッセージングプロトコルです。publish/subscribeモデルという仕組みに基づいており、双方向通信可能、非常に軽量で効率的なためIoTでの通信で用いられます。
+publish/subscribeモデルでは、メッセージの送信側(Publisher)と受信側(Subscriber)の間にMQTTサーバー(Broker)が入ってメッセージを扱います。<br>
+今回はMQTT Brokerとして、OSSであるMosquittoをRaspBerry Piにインストールしていきます。また、動作確認もしたいのでクライアントツールもインストールします。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo apt-get update
+</span></span><span style="display:flex;"><span>$ sudo apt-get install -y mosquitto
+</span></span><span style="display:flex;"><span>$ sudo apt-get install mosquitto-clients
+</span></span></code></pre></div><p>それでは、Mosquittoを起動させたいと思います。以下のコマンドでMosquiitoを起動させてください。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl start mosquitto
+</span></span></code></pre></div><p>ちなみにサービスが起動しているかを知りたい場合は、<code>sudo systemctl status mosquitto</code>で確認できます。その他<code>systemctl</code>について知りたい場合は、<a href="https://qiita.com/sinsengumi/items/24d726ec6c761fc75cc9">systemctl コマンド</a>に分かりやすくまとまっていたのでそちらを参考にしてください。</p>
+<p>最後に動作確認をするためにクライアントツールを使用します。まずは<code>mosquitto_sub -h localhost -t test/1</code>を入力します。<code>-h</code>はホスト名、<code>-t</code>はトピック名です。
+そして別のターミナルから<code>mosquitto_pub -h localhost -t test/1 -m &quot;hello world!&quot;</code>を入力すると、<code>mosquitto_sub</code>にhello world!と表示されると思います。送信側はトピック名を指定し送信し、受信側は受信したいトピック名を指定することで必要な情報のみを取得できます。なので、<code>mosquitto_pub -h localhost -t test/2 -m &quot;hello world!&quot;</code>としても<code>mosquitto_sub</code>にhello world!は表示されません。</p>
+<hr>
+<h1 id="5web-uiの作成">5．Web UIの作成</h1>
+<h2 id="websocketとは">WebSocketとは</h2>
+<p>WebSocketとは、ブラウザとWebサーバーとの間で双方向通信を行うための通信規格のことです。ブラウザ(クライアント)とWebサーバー間でWebSocketでコネクションを確立した後に、MQTTで通信を行うのをMQTT over WebSocketといいます。MQTT over WebSocketはMQTTで端末と通信を行い、端末の制御を行うWeb UIを提供するアプリの場合によく使われると思います。</p>
+<h2 id="mqttサーバーの設定変更">MQTTサーバーの設定変更</h2>
+<p>早速、MQTTの設定を変更したいと思います。MosquittoをWebSocketに対応させるには、<code>/etc/mosquitto/mosquitto.conf</code>に以下を追記します。</p>
+<pre tabindex="0"><code># Place your local configuration in /etc/mosquitto/conf.d/
+#
+# A full description of the configuration file is at
+# /usr/share/doc/mosquitto/examples/mosquitto.conf.example
+
+# ==追記する箇所==
+listener 1883
+allow_anonymous true
+listener 8080
+protocol websockets
+# ==============
+
+pid_file /run/mosquitto/mosquitto.pid
+
+persistence true
+persistence_location /var/lib/mosquitto/
+
+log_dest file /var/log/mosquitto/mosquitto.log
+
+include_dir /etc/mosquitto/conf.d
+</code></pre><p>その後、mosquittoを再起動して完了です。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo systemctl restart mosquitto
+</span></span></code></pre></div><h2 id="web-uiと簡易webサーバーの実装">Web UIと簡易Webサーバーの実装</h2>
+<p>ブラウザから家電を操作するためのUIを実装していきます。MQTT over WebSocketについては、<a href="https://www.eclipse.org/paho/index.php?page=clients/js/index.php">Paho MQTTのJSクライアント</a>を使用します。
+MQTTで通信する実装は以下の通りです。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// MQTT over WebSocketの初期化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ip_addr</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">hostname</span>;   <span style="color:#75715e">// 自分自身のipアドレス
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">8080</span>; <span style="color:#75715e">// WebSocketのポート
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Paho</span>.<span style="color:#a6e22e">MQTT</span>.<span style="color:#a6e22e">Client</span>(<span style="color:#a6e22e">ip_addr</span>, <span style="color:#a6e22e">port</span>, <span style="color:#e6db74">&#34;clientId_&#34;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">new</span> Date().<span style="color:#a6e22e">getTime</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">OnButtonClick</span>(<span style="color:#a6e22e">cmd</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">cmd</span>; <span style="color:#75715e">// on_off,brightly,dark
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">message</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Paho</span>.<span style="color:#a6e22e">MQTT</span>.<span style="color:#a6e22e">Message</span>(<span style="color:#a6e22e">data</span>);      <span style="color:#75715e">// MQTTのメッセージパケットを作る
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">message</span>.<span style="color:#a6e22e">destinationName</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;M5Stack&#34;</span>;   <span style="color:#75715e">// トピック名を設定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">message</span>);   <span style="color:#75715e">// MQTTで送信(Pub)する
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">onSuccess</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;success&#34;</span>);
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">onFailure</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">message</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;err&#34;</span>,<span style="color:#a6e22e">message</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">options</span>);
+</span></span></code></pre></div><p>Web UIはシンプルにボタンを3つ配置するだけにします。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">title</span>&gt;電灯リモートスイッチ&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;client.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">body</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">h1</span>&gt;電灯リモートスイッチ&lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">form</span>&gt;
+</span></span><span style="display:flex;"><span>                &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;切/入&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;OnButtonClick(&#39;0&#39;);&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;明るく&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;OnButtonClick(&#39;1&#39;);&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;暗く&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;OnButtonClick(&#39;2&#39;);&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;/<span style="color:#f92672">form</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre></div><p>簡易Webサーバーは、PythonでもNode.jsでもOKです。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> http.server
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> socketserver
+</span></span><span style="display:flex;"><span>Handler <span style="color:#f92672">=</span> http<span style="color:#f92672">.</span>server<span style="color:#f92672">.</span>SimpleHTTPRequestHandler
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> socketserver<span style="color:#f92672">.</span>TCPServer((<span style="color:#e6db74">&#39;ip_addr&#39;</span>,<span style="color:#ae81ff">8000</span>),Handler) <span style="color:#66d9ef">as</span> httpd:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Serving on port 8000...&#34;</span>)
+</span></span><span style="display:flex;"><span>    httpd<span style="color:#f92672">.</span>serve_forever()
+</span></span></code></pre></div><hr>
+<h1 id="6リモートで操作を行う">6．リモートで操作を行う</h1>
+<p>最後に、Web UIからリモートで操作を行う実装をしていきたいと思います。<strong>3.3．送信編</strong>で作成した学習リモコンのコードを改変してMQTT通信で受信したデータに応じて赤外線データを送信するようにしていきます。
+最終的には、以下のような実装になります。<br>
+そしてWebサーバーの起動、コンパイル＋書き込みを行い、Web UIから操作できればOKです。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;PubSubClient.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;WiFi.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;M5Stack.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;IRremoteESP8266.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;IRsend.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ================================赤外線センサー関連================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define DATA_SIZE 85 </span><span style="color:#75715e">// 送信する赤外線データのサイズ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define TRANSMIT_CAPTURE_SIZE 38 </span><span style="color:#75715e">// 周波数. 赤外線リモコンの仕様が38khzなので、38で固定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> ir_send_pin <span style="color:#f92672">=</span> <span style="color:#ae81ff">26</span>; <span style="color:#75715e">// 送信するPIN番号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>IRsend <span style="color:#a6e22e">irsend</span>(ir_send_pin);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 送信する赤外線データ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> on_off[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2022</span>, <span style="color:#ae81ff">1004</span>,  <span style="color:#ae81ff">5584</span>,... , <span style="color:#ae81ff">1494</span>, <span style="color:#ae81ff">532</span>,  <span style="color:#ae81ff">512</span>};  <span style="color:#75715e">// 切/入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> brightly[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2050</span>, <span style="color:#ae81ff">978</span>,  <span style="color:#ae81ff">5586</span>,...,  <span style="color:#ae81ff">1550</span>, <span style="color:#ae81ff">480</span>,  <span style="color:#ae81ff">508</span>};  <span style="color:#75715e">// 明るく
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">uint16_t</span> dark[<span style="color:#ae81ff">85</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2020</span>, <span style="color:#ae81ff">1006</span>,  <span style="color:#ae81ff">5578</span>,...,  <span style="color:#ae81ff">488</span>, <span style="color:#ae81ff">516</span>,  <span style="color:#ae81ff">536</span>};  <span style="color:#75715e">// 暗く
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ================================================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ================================MQTT関連================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>WiFiClient wifiClient;
+</span></span><span style="display:flex;"><span>PubSubClient <span style="color:#a6e22e">mqttClient</span>(wifiClient);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define TOPIC &#34;M5Stack&#34; </span><span style="color:#75715e">// MQTTのトピック名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define QOS 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define URL &#34;x.x.x.x&#34;  </span><span style="color:#75715e">// ==BrokerのIPアドレス(RaspBerry PiのIPアドレス)==
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define PORT 1883      </span><span style="color:#75715e">// Brokerのポート番号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#define ON_OFF 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define BRIGHTLY 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define DARK 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> ssid <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SSID&#34;</span>;          <span style="color:#75715e">// ==WiFiのSSID==
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;PASSWORD&#34;</span>;  <span style="color:#75715e">// ==WiFiのパスワード==
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// ================================================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// M5Stackの初期化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  M5.begin();
+</span></span><span style="display:flex;"><span>  M5.Power.begin();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 26番ピンの設定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  pinMode(ir_send_pin, OUTPUT);
+</span></span><span style="display:flex;"><span>  digitalWrite(ir_send_pin, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  delay(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>  Serial.begin(<span style="color:#ae81ff">115200</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// WiFi接続
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  connectWiFi();
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// mqttの設定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  mqttClient.setServer(URL, PORT);
+</span></span><span style="display:flex;"><span>  mqttClient.setCallback(callback);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loop</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>mqttClient.connected()) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (mqttClient.connect(TOPIC)) {
+</span></span><span style="display:flex;"><span>      Serial.println(<span style="color:#e6db74">&#34;Connected.&#34;</span>);
+</span></span><span style="display:flex;"><span>      mqttClient.subscribe(TOPIC, QOS);
+</span></span><span style="display:flex;"><span>      Serial.println(<span style="color:#e6db74">&#34;Subscribed.&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 接続失敗
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      Serial.println(<span style="color:#e6db74">&#34;Failed.&#34;</span>);
+</span></span><span style="display:flex;"><span>      delay(<span style="color:#ae81ff">5000</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  mqttClient.loop();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">callback</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> topic, byte<span style="color:#f92672">*</span> payload, <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> length) {
+</span></span><span style="display:flex;"><span>  Serial.print(<span style="color:#e6db74">&#34;Message arrived [&#34;</span>);
+</span></span><span style="display:flex;"><span>  Serial.print(topic);
+</span></span><span style="display:flex;"><span>  Serial.print(<span style="color:#e6db74">&#34;] &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> code <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (length <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>      Serial.print((<span style="color:#66d9ef">char</span>)payload[i]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    code <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span>)payload[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
+</span></span><span style="display:flex;"><span>    Serial.print(code);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (code <span style="color:#f92672">==</span> ON_OFF) {
+</span></span><span style="display:flex;"><span>      irsend.sendRaw(on_off, <span style="color:#ae81ff">85</span>, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (code <span style="color:#f92672">==</span> BRIGHTLY) {
+</span></span><span style="display:flex;"><span>      irsend.sendRaw(brightly, <span style="color:#ae81ff">85</span>, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (code <span style="color:#f92672">==</span> DARK) {
+</span></span><span style="display:flex;"><span>      irsend.sendRaw(dark, <span style="color:#ae81ff">85</span>, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  Serial.println();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">connectWiFi</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  WiFi.begin(ssid, password);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> (WiFi.status() <span style="color:#f92672">!=</span> WL_CONNECTED) {
+</span></span><span style="display:flex;"><span>    delay(<span style="color:#ae81ff">500</span>);
+</span></span><span style="display:flex;"><span>    M5.Lcd.print(<span style="color:#e6db74">&#34;.&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  M5.Lcd.println(<span style="color:#e6db74">&#34;Successed&#34;</span>);
+</span></span><span style="display:flex;"><span>  M5.Lcd.print(<span style="color:#e6db74">&#34;IP: &#34;</span>);
+</span></span><span style="display:flex;"><span>  M5.Lcd.println(WiFi.localIP());
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h1 id="参考文献">参考文献</h1>
+<ul>
+<li><a href="https://qiita.com/hsgucci/items/86eedb5555b4234ee0e7">https://qiita.com/hsgucci/items/86eedb5555b4234ee0e7</a></li>
+<li><a href="https://mqtt.org">https://mqtt.org</a></li>
+</ul>
+
+    <h4><a href="https://DefiosLab.github.io"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2022</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
