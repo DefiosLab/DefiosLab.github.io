@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io">
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>M5Stackで高速なセンシングを目指したら苦労した話 - Sat, Dec 24, 2022</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 竹田 大将</p>
+    
+
+    
+    <p class="lead">M5Stackで高速にデータを入出力するのは大変</p>
+    
+
+    <p>この記事は「IoTLT Advent Calendar 2022」の23日目です。</p>
+<p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://qiita.com/advent-calendar/2022/iotlt" data-iframely-url="//iframely.net/yfMRalm?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+</p>
+<hr>
+<h1 id="1m5stackっていいよね">1．M5Stackっていいよね</h1>
+<p><a href="https://docs.m5stack.com/en/core/basic_v2.6">M5Stack</a>とは、ESP32を搭載したマイコンモジュールで、モノによりますが最初から液晶付いてるし、ボタン付いてるし、スピーカー/マイク、IMUなど初期搭載センサー山盛りで、Wi-FiやBluetoothまで繋がっちゃうというめっちゃ便利な開発機です。<br>
+便利さもさることながら、今まで私がIoT工作でよく使っていたRaspberryPiは最近個人では入手しづらいですが、M5Stackは安定して売っています！欲しいなって思ったときに秋葉原で買えます。<br>
+そんな入手し安さも相まって、最近は業務の製品開発でも使ったりお気に入りになりつつあるデバイスです。</p>
+<blockquote class="twitter-tweet"><p lang="zxx" dir="ltr"><a href="https://t.co/iZlu48cwvr">pic.twitter.com/iZlu48cwvr</a></p>&mdash; 大将(Taisyo) (@T_taisyou) <a href="https://twitter.com/T_taisyou/status/1605532841516838912?ref_src=twsrc%5Etfw">December 21, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<hr>
+<h1 id="2-m5stackを本格的に使いたかった">2. M5Stackを本格的に使いたかった</h1>
+<p>M5StackはIoT入門教材にも使われたり、個人的には初心者の勉強向きかなとも思っていたんですが「画面も付いてるし、SDスロット付いてるし、中身ESP32だし、これをベースに組み込みシステム作ってもいいんじゃない？」ということで今までPICとかAVRとかPSoCとかをベースにマイコンから基板起こしてLCDやSDカードドライバなどを自分で書いていたようなシステムのベースをこれに置き換えて、もっと開発を簡単にしよう！と本格的な使用を検討することになりました。</p>
+<p>ということで、自作したコントローラーの入力でロボットを操作することを想定して、単純にA/Dで入力した値をそのままD/Aで出すデバイスを試しに作ってみようと思いました。<br>
+M5StackにはSDカードスロットや液晶が付いてるので、操作記録をSDに記録したり、今のロボットのパワー出力を画面にかっこよく表示させることも将来的にできるかなと思ってベースにM5を選んでみました。<br>
+<figure><img src="machine_robot_contest.png" width="200px"/>
+</figure>
+</p>
+<p>仕様としては、コントローラ操作(アナログスティックとか)の細かい動きや素早い動きでも反応良くしたかったのと、
+処理内容としては「ADCで値を取得して、ちょっと計算して、DACで出すだけ」というマイコンにやらせる仕事にしてはとても簡単だったので<strong>希望動作周期は1kHz</strong>としました。<br>
+PICマイコンならもっとセンサーやタスクが多くてもこれぐらいの速度でADC-&gt;DACできたし、ESP32がコアのM5Stackならバッチリっでしょ。と思っていました。</p>
+<hr>
+<h1 id="3-adcdacに何を使うか">3. ADC/DACに何を使うか</h1>
+<p>M5Stack Base V2.6の場合、GPIOで使えるADC, DACはそれぞれ2個ずつで、
+扱える電圧は0~3.3V、分解能は12bitで「もうちょっと分解能欲しいときもあるかもだけど、とりあえずまぁいいかなぁ」と思っていたんですが、個体差あるかもしれませんがどうやらノイズが凄いらしいという情報もいくつかあったので、内蔵AD/DAは使わない方向で作ることにしました。</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">ESP32のADC、元々電圧範囲真ん中以外かなり線形性悪かったような気がします。M5Stack固有でさらにノイズ乗ってる可能性も高いです。</p>&mdash; Kenta IDA (@ciniml) <a href="https://twitter.com/ciniml/status/1235201261605019648?ref_src=twsrc%5Etfw">March 4, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><br>
+<p>M5Stackといえばユニット(センサーなど)がケーブル1本接続するだけで簡単に使えるのが特徴の一つです。<br>
+探してみたらADC/DACモジュールもあったので <strong>「これをM5に ちょいと くっつけて、 さっ とコード書いたらもう完成じゃん！！」</strong> とM5の便利さに興奮しつつADC/DACはこれを使うことにしました。<br>
+ADCは0〜12V検出で最大分解能16bit、DACは最大分解能12bitで出力電圧0〜3.3Vです。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://www.switch-science.com/products/5221" data-iframely-url="//iframely.net/4Ej4DFw"></a></div></div><script async src="//iframely.net/embed.js"></script>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://www.switch-science.com/products/5222" data-iframely-url="//iframely.net/u9ne4bm"></a></div></div><script async src="//iframely.net/embed.js"></script><br>
+<p>今回使おうと思っていたM5Stack Basicにはユニットを繋げられる穴が一つしかなかったのでハブも買いました。<br>
+将来的にいっぱい繋げることも考えて6ポートに増やせるやつを選びました。<br>
+チャンネルの取得制御の仕方はポーリング制御らしいです。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 170px; padding-bottom: 0;"><a href="https://www.switch-science.com/products/7588" data-iframely-url="//iframely.net/KDI2aRK"></a></div></div><script async src="//iframely.net/embed.js"></script><br>
+<hr>
+<h1 id="4-1-速さが足りない---うっかりミス編">4-1. 速さが足りない - うっかりミス編</h1>
+<p>ちょっと察しのいい方はすでに先ほど貼った商品ページのスペックからオチが予想できていたかもしれませんが&hellip;</p>
+<p><font size="7" color="red">速さが足りない！！</font></p>  
+<p>それも当たり前、M5StackのADCユニット(中身はADS1100)のサンプルレートは<code>MAX 128Hz</code>だからです。<br>
+仕様を知った時「遅い！！」と思わず最初は言ってしまったが、電子工作ではこれぐらいで十分のことも多くて、私の要求が異常なだけだなと反省。<br>
+ともかく、1kHzなんてハナから無理な構成でした。「仕様をちゃんと読んで買いましょう」という初歩的な教訓になりました。</p>
+<hr>
+<h1 id="4-2-速さが足りない---公式ユニットの限界編">4-2. 速さが足りない - 公式ユニットの限界編</h1>
+<p>ということでADCをどうしようか考えていたところ、M5Stack用 I/O拡張ユニット2なるものを発見。<br>
+なんとこれは1個で、ADCとしても使えるI/Oポートが8個も拡張できるらしい。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 170px; padding-bottom: 0;"><a href="https://www.switch-science.com/products/8187" data-iframely-url="//iframely.net/jKxDFPY"></a></div></div><script async src="//iframely.net/embed.js"></script><br>
+<p>中身はSTM32F030マイコンで、データシートを読んでもADCは3.3V 12bit分解能で1MHzのスピードでできそうだったので変換スピードは問題なさそうでした。<br>
+標準の<code>Wire.h</code>を使うとI2C通信は高速モードでも<code>400kHz</code>だが、まぁ今回の 1kHz or 2kHz 要求には耐えられる速度が出るだろうと雑に考えていました。</p>
+<p><font size="5">しかし...</font></p>  
+<p><font size="7" color="red">速さが足りない！！</font></p>  
+<p>I2C高速モード<code>400kHz</code>で、公式ライブラリのM5_EXTIO2からデータを読み取る以下の関数を使って時間計測をした。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> M5_EXTIO2<span style="color:#f92672">::</span>readBytes(<span style="color:#66d9ef">uint8_t</span> addr, <span style="color:#66d9ef">uint8_t</span> reg, <span style="color:#66d9ef">uint8_t</span> <span style="color:#f92672">*</span>buffer,
+</span></span><span style="display:flex;"><span>                          <span style="color:#66d9ef">uint8_t</span> length) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint8_t</span> index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// (1)-----------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    _wire<span style="color:#f92672">-&gt;</span>beginTransmission(addr);
+</span></span><span style="display:flex;"><span>    _wire<span style="color:#f92672">-&gt;</span>write(reg);
+</span></span><span style="display:flex;"><span>    _wire<span style="color:#f92672">-&gt;</span>endTransmission();
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// --------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// (2)-----------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (_wire<span style="color:#f92672">-&gt;</span>requestFrom(addr, length)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint8_t</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> length; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            buffer[index<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> _wire<span style="color:#f92672">-&gt;</span>read();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// --------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>結果は以下の通り。</p>
+<p>
+<table border>
+<tr>
+<td>(1)</td>
+<td>(2)</td>
+<td>合計</td>
+</tr>
+<tr>
+<td>118μs</td>
+<td>299μs</td>
+<td>417μs</td>
+</tr>
+</table>
+</p>
+<p>1ポート読み取るのに<code>417μs</code>もかかっていたら、3ポートも読み取ったら<code>1ms</code>超えてしまう&hellip;<br>
+どうも思っていたスペックで動作するような設定になっていなそうだし、変換完了の割り込みとかあればもっと高速に読み取れたりするのにな&hellip;とSTM32F030の動作設定を自分でしたくなったが、ファームウェア書き込み済みで埋め込まれているSTM32F030を取り出して自分で書き込み直すのはものすごく面倒だったので結果諦めました・・・</p>
+<p>その他にも、</p>
+<ul>
+<li>* DACユニットも読み取りに<code>183μs</code>かかる。</li>
+<li>* PaHub2ユニットでポートセレクトして通信するのに<code>108μs</code>かかる。</li>
+<li>* 公式ライブラリでの画面描画はとても時間がかかる（これは<a href="https://github.com/lovyan03/LovyanGFX">LovyanGFX</a>で軽減できる）</li>
+</ul>
+<p>などなど調査でわかり&hellip;.<br>
+<strong>ソフトウェア的にマルチコア/マルチスレッドや割り込みを駆使しても、そもそも公式ユニットの組み合わせで物理的に私が期待する速度で動作させることはできない&hellip;という結論に至りました。</strong></p>
+<hr>
+<h1 id="5-解決方法">5. 解決方法</h1>
+<p>結果、公式ユニットや公式のライブラリを使って開発することは諦め、いつも使ってるSPI対応ADC/DACであるMCP3204, MCP4922を秋月で買って自分で回路を組んで、ドライバと言うほどのものでもないですが自分で関数を実装して組み上げることにしました。</p>
+<p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://akizukidenshi.com/catalog/g/gI-00239/" data-iframely-url="//iframely.net/hl47tQN"></a></div></div><script async src="//iframely.net/embed.js"></script>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://akizukidenshi.com/catalog/g/gI-02090/" data-iframely-url="//iframely.net/GWgaX0d"></a></div></div><script async src="//iframely.net/embed.js"></script>
+</p>
+<p>M5StackでSPIのポートを1つ指定し、複数のADC/DACの扱いはCSを使ってポーリングで制御するようにしました。</p>
+<p><font size="5" color="white">一瞬でできました。</font></p>  
+<p>入力(AD)4ch/出力(DA)4chで AD-&gt;ちょっとした計算-&gt;DA しても<strong>全然1ms周期で動作します。</strong></p>
+<hr>
+<h1 id="6-結論">6. 結論</h1>
+<p>M5Stackの公式ユニットでリアルタイムシステムを作るのは期待する条件にもよりますが難しいね。という話でした。<br>
+結局回路を組まないといけないことがわかっていれば、作業コスト・金銭的なコスト的に見ても最初からPICなどのマイコンベースで作ってたほうがよかったかも&hellip;と思いました。<br>
+しかし、M5StackはWi-Fi、Bluetoothも使えて、液晶やSDカードスロットが最初からついてるところが魅力で実際センサーや外部チップとの高精度・高速なやり取りを考えなければ全体的に開発しやすかったので、リアルタイム処理はマイコンに任せて、M5Stackは操作端末として通信で連携させちゃうというリッチ構成もありかなとも思います。<br>
+M5Stackをバリバリ使おうという人のなにか参考になればと思います。<br>
+では、よきM5Stackライフを〜</p>
+<hr>
+<h1 id="関連記事">関連記事</h1>
+<p>この記事内の調査の殆どをやってくれた弊社従業員が書いた記事です。<br>
+<a href="https://defioslab.github.io/post/remote_contoroller_mqtt/">M5Stackで始めるIoT開発入門〜学習リモコン〜</a></p>
+
+    <h4><a href="https://DefiosLab.github.io"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2022</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
