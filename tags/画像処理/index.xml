@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>画像処理 on Defios Lab.</title>
+    <link>https://DefiosLab.github.io/tags/%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86/</link>
+    <description>Recent content in 画像処理 on Defios Lab.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>jp</language>
+    <lastBuildDate>Sat, 24 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Universal IntrinsicsでSIMDプログラミング</title>
+      <link>https://DefiosLab.github.io/post/cv-universal-intrinsic/</link>
+      <pubDate>Sat, 24 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/post/cv-universal-intrinsic/</guid>
+      <description>岩手県立大学アドベントカレンダー18日目の記事です（大遅刻）
+自己紹介 はじめまして近藤鯛貴です。
+岩手県立大学ソフトウェア情報学研究科の博士課程に在学しつつ、Defios株式会社というベンチャー企業を経営しています。
+大学ではラズパイとかJetsonなどの小型コンピュータを対象に高速化の研究を行っており、会社ではAI/IoT分野を中心に受託開発やコンサルティング業務を行ってます。
+最近Defiosで技術ブログを立ち上げました。せっかくなのでこちらから投稿します。
+1．はじめに 現代の大体のCPUではSIMD（Single Instruction Multiple Data)命令が実行可能です。SIMDとは一つの命令で複数のデータを処理する並列化形態です。上手く使うことでソフトウェアを高速化することが出来ます。
+しかし、プロセッサのアーキテクチャや製品種類によって対応しているSIMDのbit幅や命令セットが異なり、様々なコンピュータ上でSIMDを活用するアプリケーションを実装するのは少し厄介です。
+ふと、画像処理ライブラリであるOpenCVのSIMD対応がどうなっているのか気になって調べたところ以下の記事を見つけました。
+どうやら、OpenCVではUniversal Intrinsicというライブラリを用いてSIMDアーキテクチャの差異を吸収しているようです。
+本記事ではこのUniversal Intrinsic(以下UI)の使い方と簡単な実装例を紹介します。
+2．使い方 普通にOpenCVをインストールして、&amp;lt;opencv2/core/simd_intrinsics.hpp&amp;gt;をincludeすればUIを使うことが出来ます。
+SIMDが有効になっているか、どのbit幅が使えるかはOpenCVのサンプルのsimd_basic.cppを実行することで確認できます。
+以下AVX2環境でのsimd_basic.cppの実行結果
+================== macro dump =================== CV_SIMD is defined: 1 CV_SIMD_WIDTH is defined: 32 CV_SIMD128 is defined: 1 CV_SIMD256 is defined: 1 CV_SIMD512 is defined: 0 CV_SIMD_64F is defined: 1 CV_SIMD_FP16 is defined: 0 ================= sizeof checks ================= sizeof(v_uint8) = 32 sizeof(v_int32) = 32 sizeof(v_float32) = 32 ================== arithm check ================= (vx_setall_u8(10) + vx_setall_u8(45)).</description>
+    </item>
+    
+  </channel>
+</rss>

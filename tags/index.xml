@@ -6,7 +6,25 @@
     <description>Recent content in Tags on Defios Lab.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>jp</language>
-    <lastBuildDate>Tue, 20 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SIMD</title>
+      <link>https://DefiosLab.github.io/tags/simd/</link>
+      <pubDate>Sat, 24 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/tags/simd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>画像処理</title>
+      <link>https://DefiosLab.github.io/tags/%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86/</link>
+      <pubDate>Sat, 24 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/tags/%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>M5Stack</title>
       <link>https://DefiosLab.github.io/tags/m5stack/</link>

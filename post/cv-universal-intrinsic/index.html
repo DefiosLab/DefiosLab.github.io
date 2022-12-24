@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io">
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>Universal IntrinsicsでSIMDプログラミング - Sat, Dec 24, 2022</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 近藤 鯛貴</p>
+    
+
+    
+
+    <p><a href="https://qiita.com/advent-calendar/2022/ipu">岩手県立大学アドベントカレンダー18日目</a>の記事です（大遅刻）</p>
+<p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://qiita.com/advent-calendar/2022/ipu" data-iframely-url="//iframely.net/ImHYOMe?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+</p>
+<hr>
+<h1 id="自己紹介">自己紹介</h1>
+<p>はじめまして近藤鯛貴です。</p>
+<p>岩手県立大学ソフトウェア情報学研究科の博士課程に在学しつつ、Defios株式会社というベンチャー企業を経営しています。</p>
+<p>大学ではラズパイとかJetsonなどの小型コンピュータを対象に高速化の研究を行っており、会社ではAI/IoT分野を中心に受託開発やコンサルティング業務を行ってます。</p>
+<p>最近Defiosで技術ブログを立ち上げました。せっかくなのでこちらから投稿します。</p>
+<hr>
+<h1 id="1はじめに">1．はじめに</h1>
+<p>現代の大体のCPUではSIMD（Single Instruction Multiple Data)命令が実行可能です。SIMDとは一つの命令で複数のデータを処理する並列化形態です。上手く使うことでソフトウェアを高速化することが出来ます。<br>
+しかし、プロセッサのアーキテクチャや製品種類によって対応しているSIMDのbit幅や命令セットが異なり、様々なコンピュータ上でSIMDを活用するアプリケーションを実装するのは少し厄介です。</p>
+<p>ふと、画像処理ライブラリであるOpenCVのSIMD対応がどうなっているのか気になって調べたところ以下の記事を見つけました。</p>
+<p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://qiita.com/tomoaki_teshima/items/8195c25a3f0448ce300b" data-iframely-url="//iframely.net/qt3Wvjm?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://qiita.com/hon_no_mushi/items/df9b8159e7fb47c9e30c" data-iframely-url="//iframely.net/TLsWpHM?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+</p>
+<p>どうやら、OpenCVでは<strong>Universal Intrinsic</strong>というライブラリを用いてSIMDアーキテクチャの差異を吸収しているようです。</p>
+<p>本記事ではこのUniversal Intrinsic(以下UI)の使い方と簡単な実装例を紹介します。</p>
+<hr>
+<h1 id="2使い方">2．使い方</h1>
+<p>普通にOpenCVをインストールして、<code>&lt;opencv2/core/simd_intrinsics.hpp&gt;</code>をincludeすればUIを使うことが出来ます。<br>
+SIMDが有効になっているか、どのbit幅が使えるかはOpenCVのサンプルの<a href="https://github.com/opencv/opencv/blob/4.x/samples/cpp/simd_basic.cpp">simd_basic.cpp</a>を実行することで確認できます。<br>
+以下AVX2環境でのsimd_basic.cppの実行結果</p>
+<pre tabindex="0"><code>
+==================  macro dump  ===================
+CV_SIMD is defined: 1
+CV_SIMD_WIDTH is defined: 32
+CV_SIMD128 is defined: 1
+CV_SIMD256 is defined: 1
+CV_SIMD512 is defined: 0
+CV_SIMD_64F is defined: 1
+CV_SIMD_FP16 is defined: 0
+=================  sizeof checks  =================
+sizeof(v_uint8) = 32
+sizeof(v_int32) = 32
+sizeof(v_float32) = 32
+==================  arithm check  =================
+(vx_setall_u8(10) + vx_setall_u8(45)).get0() =&gt; 55
+=====================  done  ======================
+</code></pre><p>AVX2のSIMD幅は256bitです。<code>CV_SIMD256</code>が1となっているので有効になっていることが分かります。<br>
+ちなみに、私の環境ではコンパイルする際に-mavx2(gcc)オプションを入れないとAVX2が有効にならずにSSEで実行されました。</p>
+<hr>
+<h1 id="3行列積を実装してみる">3．行列積を実装してみる</h1>
+<p>UIのドキュメントとして<a href="https://docs.opencv.org/4.x/d6/dd1/tutorial_univ_intrin.html">チュートリアル</a>や<a href="https://docs.opencv.org/4.x/df/d91/group__core__hal__intrin.html#ga1edd512aeff776eb2e7e742983686d40">関数のリファレンス</a>などがあります。<br>
+これらを参考に行列積を簡単に書いてみました。<br>
+今回は使ってみることが主目的なので最適化はあまり考えてないです(許して..)。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> step<span style="color:#f92672">=</span>v_float32().nlanes;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma omp parallel for
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>SIZE;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;j<span style="color:#f92672">&lt;</span>SIZE;j<span style="color:#f92672">+=</span>step){
+</span></span><span style="display:flex;"><span>    v_float32 c_vec <span style="color:#f92672">=</span> vx_setall_f32(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;k<span style="color:#f92672">&lt;</span>SIZE;k<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">float</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> b <span style="color:#f92672">+</span> j <span style="color:#f92672">+</span> k <span style="color:#f92672">*</span> SIZE;
+</span></span><span style="display:flex;"><span>      v_float32 b_vec <span style="color:#f92672">=</span> vx_load(ptr);
+</span></span><span style="display:flex;"><span>      v_float32 a_vec <span style="color:#f92672">=</span> vx_setall_f32(a[(i<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>k]);
+</span></span><span style="display:flex;"><span>      c_vec <span style="color:#f92672">=</span> v_fma(a_vec,b_vec,c_vec);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    v_store(c<span style="color:#f92672">+</span>i<span style="color:#f92672">*</span>SIZE<span style="color:#f92672">+</span>j,c_vec);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>行列のC=ABを計算します。最内ループにてAの１要素とBのベクトルを積和演算して計算してます。</p>
+<p><code>v_float32().nlanes</code>で32bit floatのレーン数を取得してループ回数を決定しています。<br>
+<code>vx～</code>系の命令は有効になっているSIMD幅で処理するものなので上記コードはどんなアーキテクチャでも対応していればSIMD並列化して計算してくれるコードになります（おそらく）。</p>
+<p>ちなみに、今回スレッド並列化はOpenMPでやりましたが、OpenCVにはUIのように複数ある並列化APIを上手く使う<a href="https://docs.opencv.org/4.x/dc/ddf/tutorial_how_to_use_OpenCV_parallel_for_new.html">_paralell_for_機能</a>があります。</p>
+<hr>
+<h1 id="4性能を見てみる">4．性能を見てみる</h1>
+<p>上記コードとSIMDなし実装の実行時間を比べてみました。
+SIMDなし実装は以下になります。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#pragma omp parallel for
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>SIZE;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;k<span style="color:#f92672">&lt;</span>SIZE;k<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;j<span style="color:#f92672">&lt;</span>SIZE;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>      c[((i<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>j)] <span style="color:#f92672">+=</span> a[((i<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>k)] <span style="color:#f92672">*</span> b[((k<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>j)];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>便宜上SIMDあり/なしと区別していますが、SIMD並列化以外にも様々な最適化でソフトウェアの実行速度は大きく変わります。今回の比較は純粋なSIMDの比較ではなく、あくまで参考程度に見ていただければと思います。</p>
+<p>コンパイラによる最適化を防ぐために-O0でコンパイルしました。</p>
+<table border>
+環境
+<tr>
+<td>CPU</td>
+<td>メモリ</td>
+<td>GCC</td>
+</tr>
+<tr>
+<td>i5-12400F</td>
+<td>16GB</td>
+<td>11.3</td>
+</tr>
+</table>
+<br>
+<table border>
+結果
+<tr>
+<td>SIZE=512</td>
+<td>時間[msec]</td>
+</tr>
+<tr>
+<td>SIMDなし</td>
+<td>46.04</td>
+</tr>
+<tr>
+<td>SIMDあり</td>
+<td>34.37</td>
+</tr>
+</table>
+<br>
+<p>30%ほど速くなりました。ちなみに、これくらいのコードだとSIMDなし実装にO3最適化を行う方が速くなりました。O3になると自動ベクトル化がつくので何もしなくても自動でAVX2が使われます。</p>
+<hr>
+<h1 id="5-最後に">5. 最後に</h1>
+<p>今回使ったコードは<a href="https://github.com/Taiki-azrs/cv-simd-mm">こちら</a>に上げました。<br>
+最初<code>vx~</code>系の命令を知らずに256bitを指定して実装したコードも含まれてます(mm-256.cpp)</p>
+<p>あまり自分のソフトウェアでUIを使う機会はないかと思いますが、簡単にSIMDプログラミングが出来て良いですね。</p>
+<p>OpenCVのリポジトリを見た感じ、<code>処理名.simd.hpp</code>にUIを使った実装が記述されているようです。<br>
+畳み込み計算のような基本的な処理は大体SIMD実装が用意されていますが<a href="https://github.com/opencv/opencv/tree/4.x/modules/features2d/src">ORBやakazeのような特徴抽出</a>はあまり対応されていないようです（単純にSIMD並列が難しいor他関数の組み合わせで事足りるだけかもしれないですが）。</p>
+<p>対応していない関数をSIMD化してプルリク出してみるのも面白いかもですね。</p>
+
+    <h4><a href="https://DefiosLab.github.io"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2022</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
