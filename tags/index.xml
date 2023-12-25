@@ -6,7 +6,25 @@
     <description>Recent content in Tags on Defios Lab.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>jp</language>
-    <lastBuildDate>Sat, 24 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Edge Ai</title>
+      <link>https://DefiosLab.github.io/tags/edge-ai/</link>
+      <pubDate>Thu, 07 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/tags/edge-ai/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>M5core2</title>
+      <link>https://DefiosLab.github.io/tags/m5core2/</link>
+      <pubDate>Thu, 07 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/tags/m5core2/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>M5Stack</title>
       <link>https://DefiosLab.github.io/tags/m5stack/</link>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Edge Ai on Defios Lab.</title>
+    <link>https://DefiosLab.github.io/tags/edge-ai/</link>
+    <description>Recent content in Edge Ai on Defios Lab.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>jp</language>
+    <lastBuildDate>Thu, 07 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/tags/edge-ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>M5core2でリアルタイム７seg推論</title>
+      <link>https://DefiosLab.github.io/post/m5core2_7seg/</link>
+      <pubDate>Thu, 07 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/post/m5core2_7seg/</guid>
+      <description>1. はじめに 本記事はM5core2内で7seg文字をニューラルネットワークでリアルタイム画像認識をさせようという記事です。 M5stackは約5cm×5cmの正方形のケースの中に、Wi-FiとBluetoothによる無線通信機能を搭載したESP32をはじめ、カラーディスプレイ、ボタン、スピーカー、IMU,MicroSDなどの周辺部品が一つのモジュールとしてまとまっているマイコンモジュールです。さらに、側面、背面のピンにケーブルを接続すれば色々なセンサー類が使用できるようになります。 M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変更になったり、6軸IMUが追加されたり、バッテリー容量が3倍ほどになっていたりしています。 本記事を通じてM5core2でリアルタイムにAIを動かす際の参考になれば幸いです。 2.　開発環境 使用した機材、環境は以下になります。 端末 : M5core2　(今回は試していないが、M5 basicなどの他のM5シリーズでも可能だと思われる) カメラ : UnitCam　(Wi-Fi通信 or uart通信で画像を送信できるカメラ) 環境 : VSCode + PlatformIO 今回使用したファイルは下記のリポジトリにまとめてあります。クローンして使用してください https://github.com/DefiosLab/M5_7seg_program 3. モデル学習 7seg画像認識のモデルを作成する際に下記サイトを参考に行い、データセットも下記サイトからお借りしました。とても分かりやすく画像認識のモデルを作成する際に必要な情報がまとめてあっておすすめです。
+【サンプルコード】Python・KerasでCNN機械学習。自作・自前画像のオリジナルデータセットで画像認識入門
+実際に学習に使用したプログラムは&amp;quot;learn_7seg.ipynb&amp;quot;になります
+学習済みのmodel.h5ファイルが次のステップで必要になります
+4. モデルの量子化 量子化とは重みなどのパラメータをより低bitで表すことでモデルの軽量化を行うモデル圧縮の1つの手法です。 量子化の際に使用したプログラムは&amp;quot;quantize.ipynb&amp;quot;になります 1.下記のコードでモデルの重みだけをfloat32からint8に変換するダイナミック量子化を行います output_model = &amp;#34;model.tflite&amp;#34; input_model = &amp;#39;model.h5&amp;#39; keras_model = tf.keras.models.load_model(input_model) converter = tf.lite.TFLiteConverter.from_keras_model(keras_model) tflite_quant_model = converter.convert() 2.量子化を行ったmodel.tfliteをM5core2上で動くようにCファイルに変換します ! xxd -i {MODEL_TFLITE_PATH} &amp;gt; model.c xxd：ファイルを16進数表記で出力。「-i」オプションはC言語のインクルードファイル形式で表示する 5. tfmicroライブラリの作成 PlatformIoでのM5core2の開発環境は以下のサイトを参考に行いました。
+VSCodeとPlatformIOでM5Stack Core2開発
+Tensorflow liteをM5core2で使えるようにするためにtfliteのライブラリを自分で作成する必要があります
+1.PlatformIOでtfmicroというプロジェクトを作成する(boardはM5stack Core2を選択) 2.</description>
+    </item>
+    
+  </channel>
+</rss>
