@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LLM on Defios Lab.</title>
+    <link>https://DefiosLab.github.io/categories/llm/</link>
+    <description>Recent content in LLM on Defios Lab.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>jp</language>
+    <lastBuildDate>Thu, 16 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://DefiosLab.github.io/categories/llm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ゲームの世界にローカルLLMを！！LlamaCppUnityを公開しました</title>
+      <link>https://DefiosLab.github.io/post/release_llamacppunity/</link>
+      <pubDate>Thu, 16 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://DefiosLab.github.io/post/release_llamacppunity/</guid>
+      <description>1．はじめに 近年、LLM（Large Language Models）の利活用が進んでおり、その応用範囲は広がっています。その中でゲーム開発において、LLMを活用したいと考える方も多いと思います。例えばリアルなNPCやプレイヤーの行動に応じた自由度の高い反応を実現したい等。
+LLMをアプリに組み込む場合、ChatGPTを筆頭としたクラウドLLMと通信して行うのが主流になっていますが、生成量に応じた課金が必要でゲームへの導入には障壁があります。
+そこで、デバイス内でLLMの推論処理を完結するRuntimeライブラリ、 LlamaCppUnityを公開しました。
+2. LlamaCppUnity LlamaCppUnityはllama.cppをバックエンドとしたLLM Runtimeライブラリです。
+llama.cppの機能をそのまま使えるので、量子化やGPGPU/SIMD実行, クロスプラットフォーム(Windows, Mac, Android)に対応しています。
+MIT Licenseで公開しているので再配布・改造も自由です。(Contribution大歓迎です！)
+↓は本ライブラリの紹介動画です。
+こちらの動画内で使われているアプリは今回デモ用に作ったユニティちゃんと簡単な会話ができるアプリです。
+以下に公開していますので興味がある方はぜひ触ってみてください！（Windows, Android対応）
+モデルはELYZA-japanese-Llama-2-7bの2bit量子化モデルを使っています。
+3. サンプルコード 推論を動かすには以下のコードで簡単に実行できます。Token毎に生成結果を返すStreamにも対応しています。
+using LlamaCppUnity; public class LlamaSample : MonoBehaviour { void Start() { Llama test = new Llama(&amp;#34;&amp;lt;path/to/gguf&amp;gt;&amp;#34;); string result = test.Run(&amp;#34;Q: Name the planets in the solar system? A: &amp;#34;); //Output example: &amp;#34;1. Venus, 2. Mercury, 3. Mars,&amp;#34; //Stream Mode foreach (string text in test.RunStream(&amp;#34;Q: Name the planets in the solar system?</description>
+    </item>
+    
+  </channel>
+</rss>
