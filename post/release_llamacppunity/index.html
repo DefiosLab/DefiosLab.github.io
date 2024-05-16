@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io">
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>ゲームの世界にローカルLLMを！！LlamaCppUnityを公開しました - Thu, May 16, 2024</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 近藤 鯛貴</p>
+    
+
+    
+    <p class="lead">UnityでローカルLLMを扱えるライブラリ,「LlamaCppUnity」を公開しましたので紹介します。</p>
+    
+
+    <h1 id="1はじめに">1．はじめに</h1>
+<p>近年、LLM（Large Language Models）の利活用が進んでおり、その応用範囲は広がっています。その中でゲーム開発において、LLMを活用したいと考える方も多いと思います。例えばリアルなNPCやプレイヤーの行動に応じた自由度の高い反応を実現したい等。</p>
+<p>LLMをアプリに組み込む場合、ChatGPTを筆頭としたクラウドLLMと通信して行うのが主流になっていますが、生成量に応じた課金が必要でゲームへの導入には障壁があります。</p>
+<p>そこで、デバイス内でLLMの推論処理を完結するRuntimeライブラリ、 <strong>LlamaCppUnity</strong>を公開しました。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://github.com/DefiosLab/LlamaCppUnity" data-iframely-url="//iframely.net/O8gKEAS?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+<br>
+<hr>
+<h1 id="2-llamacppunity">2. LlamaCppUnity</h1>
+<p>LlamaCppUnityは<a href="https://github.com/ggerganov/llama.cpp">llama.cpp</a>をバックエンドとしたLLM Runtimeライブラリです。<br>
+llama.cppの機能をそのまま使えるので、<strong>量子化やGPGPU/SIMD実行, クロスプラットフォーム(Windows, Mac, Android)に対応</strong>しています。<br>
+MIT Licenseで公開しているので再配布・改造も自由です。(Contribution大歓迎です！)</p>
+<p>↓は本ライブラリの紹介動画です。</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YAPNvy4gD-Y?si=mJwg1lKqafEXValI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<p>こちらの動画内で使われているアプリは今回デモ用に作った<strong>ユニティちゃんと簡単な会話ができるアプリ</strong>です。<br>
+以下に公開していますので興味がある方はぜひ触ってみてください！（Windows, Android対応）<br>
+モデルは<code>ELYZA-japanese-Llama-2-7bの2bit量子化モデル</code>を使っています。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://github.com/DefiosLab/LlamaCppUnity_DEMO" data-iframely-url="//iframely.net/qhd6SYA?card=small"></a></div></div><script async src="//iframely.net/embed.js"></script>
+<br>
+<hr>
+<h1 id="3-サンプルコード">3. サンプルコード</h1>
+<p>推論を動かすには以下のコードで簡単に実行できます。Token毎に生成結果を返す<code>Stream</code>にも対応しています。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c#" data-lang="c#"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> LlamaCppUnity;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LlamaSample</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">void</span> Start()
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    Llama test = <span style="color:#66d9ef">new</span> Llama(<span style="color:#e6db74">&#34;&lt;path/to/gguf&gt;&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">string</span> result = test.Run(<span style="color:#e6db74">&#34;Q: Name the planets in the solar system? A: &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//Output example: &#34;1. Venus, 2. Mercury, 3. Mars,&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//Stream Mode</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">string</span> text <span style="color:#66d9ef">in</span> test.RunStream(<span style="color:#e6db74">&#34;Q: Name the planets in the solar system? A: &#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      Debug.Log(text);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>後ほどデモアプリのソースコードも公開予定です。（アセットをおしゃれにした結果、ライセンス上そのままソースを公開できないアプリになってしまいました&hellip;推論部分だけを抽出したサンプルアプリにする予定です。）</p>
+<hr>
+<h1 id="4-今後">4. 今後</h1>
+<p>Defiosでは現在、<strong>どんなゲーム機でもゲーム開発者が簡単にLLMを扱えるSDK</strong>を展開することを目的に活動しています。今回のライブラリはそのRuntime部分ということになります。</p>
+<p>&ldquo;どんなゲーム機でも&quot;という部分では、ゲーミングPCのような高性能なGPUを搭載したコンピュータでは数十Bモデルの動作も量子化等を駆使すれば可能になってくると思いますが、スマートフォンスケールではまだまだ厳しい現状です。</p>
+<p>現在普及しているスマートフォンのメモリは4GB～8GB程度ですが、7B-2bit量子化モデルでもメモリを2GB程使ってしまい、生成速度・精度も良いとは言えません。</p>
+<p>この課題に対して弊社が得意とするAIモデルの軽量化・高速化技術を駆使して解決できないか研究開発中です。また、一般的に生成精度とモデル規模はトレードオフの関係にありますが、ゲームの面白さとは別です。1B以下のモデルでも何か活用できないかも模索しています。</p>
+<p>このようにLLM x ゲーム開発というトピックを取り組んでいきますので良ければウォッチしていただけると嬉しいです。</p>
+<p>では、良きLLMライフを！</p>
+
+    <h4><a href="https://DefiosLab.github.io"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2024</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
