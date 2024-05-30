@@ -107,6 +107,12 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 <p><a href="https://child-programmer.com/ai/cnn-originaldataset-samplecode/#Google_Colaboratory_PythonKerasCNN">【サンプルコード】Python・KerasでCNN機械学習。自作・自前画像のオリジナルデータセットで画像認識入門</a></p>
 </li>
 <li>
+<p>データセットは下記サイトからダウンロードできます。</p>
+</li>
+<li>
+<p><a href="https://child-programmer.com/download/seven-segment-digits-ocr-original-model-dataset/">ダウンロード：7セグメントのデジタル数字画像認識用オリジナルデータセット</a></p>
+</li>
+<li>
 <p>実際に学習に使用したプログラムは&quot;learn_7seg.ipynb&quot;になります</p>
 </li>
 </ul>
@@ -117,15 +123,25 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 <li>量子化の際に使用したプログラムは&quot;quantize.ipynb&quot;になります</li>
 </ul>
 <ol>
-<li>1.下記のコードでモデルの重みだけをfloat32からint8に変換するダイナミック量子化を行います</li>
+<li>1.下記のコードで整数量子化(入出力の型は元モデルのままfloat)を行います</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    output_model <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;model.tflite&#34;</span>
-</span></span><span style="display:flex;"><span>    input_model <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;model.h5&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># settings</span>
+</span></span><span style="display:flex;"><span>input_model <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;model.h5&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    keras_model <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>models<span style="color:#f92672">.</span>load_model(input_model)
+</span></span><span style="display:flex;"><span>keras_model <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>models<span style="color:#f92672">.</span>load_model(input_model)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    converter <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>lite<span style="color:#f92672">.</span>TFLiteConverter<span style="color:#f92672">.</span>from_keras_model(keras_model)
-</span></span><span style="display:flex;"><span>    tflite_quant_model <span style="color:#f92672">=</span> converter<span style="color:#f92672">.</span>convert()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">representative_dataset_gen</span>():
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100</span>):
+</span></span><span style="display:flex;"><span>      input_image <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>cast(train_images[i], tf<span style="color:#f92672">.</span>float32)
+</span></span><span style="display:flex;"><span>      input_image <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>reshape(input_image, [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">28</span>,<span style="color:#ae81ff">28</span>,<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">yield</span> ([input_image])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>converter <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>lite<span style="color:#f92672">.</span>TFLiteConverter<span style="color:#f92672">.</span>from_keras_model(keras_model)
+</span></span><span style="display:flex;"><span>converter<span style="color:#f92672">.</span>optimizations <span style="color:#f92672">=</span> [tf<span style="color:#f92672">.</span>lite<span style="color:#f92672">.</span>Optimize<span style="color:#f92672">.</span>DEFAULT]
+</span></span><span style="display:flex;"><span>converter<span style="color:#f92672">.</span>representative_dataset <span style="color:#f92672">=</span> representative_dataset_gen
+</span></span><span style="display:flex;"><span>tflite_quant_model <span style="color:#f92672">=</span> converter<span style="color:#f92672">.</span>convert()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;7seg_InOutFloat_intQuantize.tflite&#34;</span>, <span style="color:#e6db74">&#39;wb&#39;</span>) <span style="color:#66d9ef">as</span> o_:
+</span></span><span style="display:flex;"><span>    o_<span style="color:#f92672">.</span>write(tflite_quant_model)
 </span></span></code></pre></div><ol start="2">
 <li>2.量子化を行ったmodel.tfliteをM5core2上で動くようにCファイルに変換します</li>
 </ol>
@@ -139,63 +155,26 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 </ul>
 <h1 id="5-tfmicroライブラリの作成">5. tfmicroライブラリの作成</h1>
 <ul>
-<li>
-<p>PlatformIoでのM5core2の開発環境は以下のサイトを参考に行いました。</p>
-</li>
-<li>
-<p><a href="https://qiita.com/desertfox_i/items/a6ff7deaa0a0b3802bcd">VSCodeとPlatformIOでM5Stack Core2開発</a></p>
-</li>
-<li>
-<p>Tensorflow liteをM5core2で使えるようにするためにtfliteのライブラリを自分で作成する必要があります</p>
-</li>
+<li>PlatformIoでのM5core2の開発環境は以下のサイトを参考に行いました。</li>
+<li><a href="https://qiita.com/desertfox_i/items/a6ff7deaa0a0b3802bcd">VSCodeとPlatformIOでM5Stack Core2開発</a></li>
+<li>Tensorflow liteをM5core2で使えるようにするためにtfliteのライブラリを自分で作成する必要があります</li>
 </ul>
 <ol>
 <li>1.PlatformIOでtfmicroというプロジェクトを作成する(boardはM5stack Core2を選択)</li>
 <li>2.TensorFlow_esp32をcloneする</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        git clone git@github.com:DefiosLab/TensorFlow_esp32.git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    git clone git@github.com:DefiosLab/TensorFlow_esp32.git
 </span></span></code></pre></div><ol start="3">
 <li>3.クローンしてきたTensorflow_esp32/PlatformIO/tfmicro/lib/tfmicroをlib/に入れる</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        cp -r Tensorflow_esp32/PlatformIO/tfmicro/lib/tfmicro <span style="color:#e6db74">${</span>Project<span style="color:#e6db74">}</span>/lib/
-</span></span></code></pre></div><ol start="4">
-<li>4.platform.iniに<code>lib_extra_dirs=lib</code>を追加する</li>
-</ol>
-<ul>
-<li>ライブラリの呼び出し方
-<ul>
-<li>platform.iniのlib_depsに作成したライブラリのパスを追加する</li>
-</ul>
-</li>
-</ul>
-<h1 id="6-m5core2とカメラの接続">6. M5core2とカメラの接続</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    cp -r Tensorflow_esp32/PlatformIO/tfmicro/lib/tfmicro <span style="color:#e6db74">${</span>Project<span style="color:#e6db74">}</span>/lib
+</span></span></code></pre></div><h1 id="6-m5core2とカメラの接続">6. M5core2とカメラの接続</h1>
 <ul>
 <li>M5core2とカメラはuartで通信を行います。</li>
-<li>M5core2の場合は裏の小さい蓋を外さないとGPIOピンにアクセスできないので少し面倒です</li>
 </ul>
 <ol>
-<li>1.M5core2の裏面の小さい長方形の蓋を外します</li>
-</ol>
-<ul>
 <li>
-<ul>
-<li>M5Core2のGPIO接続に関しては下記のサイトを参考に行いました。</li>
-</ul>
-</li>
-<li>
-<ul>
-<li><a href="https://lang-ship.com/blog/work/m5stack-core2-gpio/">M5Stack Core2のGPIO調査</a></li>
-</ul>
-</li>
-<li>
-<ul>
-<li><a href="https://lang-ship.com/blog/work/m5stack-core2-gpio/"><img src ="https://lang-ship.com/blog/wp-content/uploads/2020/09/IMG_6258.jpg" width="20%"></a></li>
-</ul>
-</li>
-</ul>
-<ol start="2">
-<li>
-<p>2.M5Core2とカメラを下記のように接続します</p>
+<p>2.M5Core2とカメラをGroveケーブルで接続します</p>
 <ul>
 <li>
 <ul>
@@ -214,17 +193,17 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 </li>
 <li>
 <ul>
-<li>GP13(RXD2) : TX(黄色)</li>
+<li>RX : TX(黄色)</li>
 </ul>
 </li>
 <li>
 <ul>
-<li>GP14(TXD2) : RX(白線)</li>
+<li>TX : RX(白線)</li>
 </ul>
 </li>
 <li>
 <ul>
-<li>となるように接続します</li>
+<li>となるように接続します。</li>
 </ul>
 </li>
 </ul>
@@ -235,19 +214,13 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 <li>1.PlarformIOで7segというプロジェクトを作成する(boardはM5stack Core2を選択)</li>
 <li>3.クローンしたリポジトリからM5_7seg_program/PlatformIO/M5core2_7seg/srcをコピーし、作成したプロジェクトのsrcと置き換える</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        cp -r M5_7seg_program/PlatformIO/M5core2_7seg/src <span style="color:#f92672">{</span>Project<span style="color:#f92672">}</span> 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        cp -r ~/M5_7seg_program/PlatformIO/M5core2_7seg/src <span style="color:#f92672">{</span>Project<span style="color:#f92672">}</span> 
 </span></span></code></pre></div><ol start="3">
-<li>3.platform.iniに先ほど作成したtfmicroライブラリのパスを追加する。M5core2ライブラリの追加方法は上記で紹介したM5core2開発環境を解説しているサイトを参考に行なってください。</li>
-</ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>        lib_deps <span style="color:#f92672">=</span> 
-</span></span><span style="display:flex;"><span>            ~/PlatformIO/Projects/tfmicro
-</span></span><span style="display:flex;"><span>            m5stack/M5Core2@^0.1.7
-</span></span></code></pre></div><ol start="4">
 <li>
-<p>4.先ほど作成したmodel.cの配列の中身をmodel_data.cc内の配列にコピペする。</p>
+<p>3.model.cをmodel_data.ccにリネームしてsrcに配置する。</p>
 </li>
 <li>
-<p>5.この状態でビルド&amp;書き込みを行ったら、自分が学習させたモデルがM5core上で動作します</p>
+<p>4.この状態でビルド&amp;書き込みを行ったら、自分が学習させたモデルがM5core2上で動作します</p>
 </li>
 </ol>
 <ul>
@@ -264,11 +237,6 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 <li>1.分類数、表示部分</li>
 </ol>
 <ul>
-<li>
-<ul>
-<li>model_setting.cc &amp; model_setting.hを書き換えて分類数を変える</li>
-</ul>
-</li>
 <li>
 <ul>
 <li>detection_responder.ccを書き換えてディスプレイに表示する部分を書き換える</li>
@@ -310,7 +278,7 @@ M5core2はM5basicの上位機種で物理ボタンからタッチセンサに変
 <a href="http://defios.jp" target="_blank">
     Defios Inc.
 </a>
-<span id="thisyear">2023</span>
+<span id="thisyear">2024</span>
 
 
 </p>
