@@ -7,25 +7,25 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content="#000084" />
 
-    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
-    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io//favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io//favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io//favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io//favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io//favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io//favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io//favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io//favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io//favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io//favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io//favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io//favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io//favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io//favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io//favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <link rel="canonical" href="https://DefiosLab.github.io">
+    <link rel="canonical" href="https://DefiosLab.github.io/">
     
     
 </head>
@@ -34,7 +34,7 @@
     <div class="navbar-inner">
         <div class="container">
             <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
-            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <a class="brand" href="https://DefiosLab.github.io/">Defios Lab.</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     
@@ -122,18 +122,18 @@ sizeof(v_float32) = 32
 <p>UIのドキュメントとして<a href="https://docs.opencv.org/4.x/d6/dd1/tutorial_univ_intrin.html">チュートリアル</a>や<a href="https://docs.opencv.org/4.x/df/d91/group__core__hal__intrin.html#ga1edd512aeff776eb2e7e742983686d40">関数のリファレンス</a>などがあります。<br>
 これらを参考に行列積を簡単に書いてみました。<br>
 今回は使ってみることが主目的なので最適化はあまり考えてないです(許して..)。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> step<span style="color:#f92672">=</span>v_float32().nlanes;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> step<span style="color:#f92672">=</span><span style="color:#a6e22e">v_float32</span>().nlanes;
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma omp parallel for
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>SIZE;i<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;j<span style="color:#f92672">&lt;</span>SIZE;j<span style="color:#f92672">+=</span>step){
-</span></span><span style="display:flex;"><span>    v_float32 c_vec <span style="color:#f92672">=</span> vx_setall_f32(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    v_float32 c_vec <span style="color:#f92672">=</span> <span style="color:#a6e22e">vx_setall_f32</span>(<span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;k<span style="color:#f92672">&lt;</span>SIZE;k<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">float</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> b <span style="color:#f92672">+</span> j <span style="color:#f92672">+</span> k <span style="color:#f92672">*</span> SIZE;
-</span></span><span style="display:flex;"><span>      v_float32 b_vec <span style="color:#f92672">=</span> vx_load(ptr);
-</span></span><span style="display:flex;"><span>      v_float32 a_vec <span style="color:#f92672">=</span> vx_setall_f32(a[(i<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>k]);
-</span></span><span style="display:flex;"><span>      c_vec <span style="color:#f92672">=</span> v_fma(a_vec,b_vec,c_vec);
+</span></span><span style="display:flex;"><span>      v_float32 b_vec <span style="color:#f92672">=</span> <span style="color:#a6e22e">vx_load</span>(ptr);
+</span></span><span style="display:flex;"><span>      v_float32 a_vec <span style="color:#f92672">=</span> <span style="color:#a6e22e">vx_setall_f32</span>(a[(i<span style="color:#f92672">*</span>SIZE)<span style="color:#f92672">+</span>k]);
+</span></span><span style="display:flex;"><span>      c_vec <span style="color:#f92672">=</span> <span style="color:#a6e22e">v_fma</span>(a_vec,b_vec,c_vec);
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    v_store(c<span style="color:#f92672">+</span>i<span style="color:#f92672">*</span>SIZE<span style="color:#f92672">+</span>j,c_vec);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">v_store</span>(c<span style="color:#f92672">+</span>i<span style="color:#f92672">*</span>SIZE<span style="color:#f92672">+</span>j,c_vec);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>行列のC=ABを計算します。最内ループにてAの１要素とBのベクトルを積和演算して計算してます。</p>
@@ -194,7 +194,7 @@ SIMDなし実装は以下になります。</p>
 畳み込み計算のような基本的な処理は大体SIMD実装が用意されていますが<a href="https://github.com/opencv/opencv/tree/4.x/modules/features2d/src">ORBやakazeのような特徴抽出</a>はあまり対応されていないようです（単純にSIMD並列が難しいor他関数の組み合わせで事足りるだけかもしれないですが）。</p>
 <p>対応していない関数をSIMD化してプルリク出してみるのも面白いかもですね。</p>
 
-    <h4><a href="https://DefiosLab.github.io"></a></h4>
+    <h4><a href="https://DefiosLab.github.io/"></a></h4>
 </div>
 
 
@@ -207,7 +207,7 @@ SIMDなし実装は以下になります。</p>
 <a href="http://defios.jp" target="_blank">
     Defios Inc.
 </a>
-<span id="thisyear">2024</span>
+<span id="thisyear">2025</span>
 
 
 </p>

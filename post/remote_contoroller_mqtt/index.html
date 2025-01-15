@@ -7,25 +7,25 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content="#000084" />
 
-    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io/favicon/favicon-16x16.png">
-    <link rel="manifest" href="https://DefiosLab.github.io/favicon/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io//favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io//favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io//favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io//favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io//favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io//favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io//favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io//favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io//favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io//favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io//favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io//favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io//favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io//favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io/favicon/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io//favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <link rel="canonical" href="https://DefiosLab.github.io">
+    <link rel="canonical" href="https://DefiosLab.github.io/">
     
     
 </head>
@@ -34,7 +34,7 @@
     <div class="navbar-inner">
         <div class="container">
             <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
-            <a class="brand" href="https://DefiosLab.github.io">Defios Lab.</a>
+            <a class="brand" href="https://DefiosLab.github.io/">Defios Lab.</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     
@@ -81,8 +81,8 @@
 <hr>
 <h1 id="2開発環境と構成図">2．開発環境と構成図</h1>
 <p>今回作成するシステムの構成図はこんな感じです。ただ、学習リモコンを作るだけではIoTにはならないので、ネットワーク経由でも操作できるようにしました。IoTでの通信といえばMQTTと聞いたので勉強も兼ねて実装していきたいと思います。</p>
-<figure><img src="IoT_system.png"
-         alt="システム構成図" width="800px"/>
+<figure><img src="/post/remote_contoroller_mqtt/IoT_system.png"
+    alt="システム構成図" width="800px">
 </figure>
 
 <p>開発環境は以下の通りです。M5GO IoTスターターキットを購入すれば、IRセンサーの他にENVⅢ(温湿度・気圧)センサーなども付いてくるので初めてIoT開発する方にはおすすめです。前提として、Arduino IDEでのM5Stackの環境は整っていることとします。</p>
@@ -97,21 +97,21 @@
 <p>最初に学習リモコンから作成していきたいと思います。まずは、<code>IRremoteESP8266</code>のライブラリをインストールします。</p>
 <h2 id="32受信編">3.2．受信編</h2>
 <p>次に既存のリモコンから赤外線データを取得します。今回私は、電気をON・OFFするこちらのアイリスオオヤマ製のリモコンを使用します。</p>
-<figure><img src="IRIS.png"
-         alt="システム構成図" width="300px"/>
+<figure><img src="/post/remote_contoroller_mqtt/IRIS.png"
+    alt="システム構成図" width="300px">
 </figure>
 
 <p>まずは、<code>IRremoteESP8266</code>のサンプルコードを取得します。
 赤外線を受信するサンプルコードは、「ファイル」→「スケッチ例」→「IRremoteESP8266」の「IRrecvDumpV2」から取得できます。</p>
-<figure><img src="dump_sample.png"
-         alt="サンプルコード取得" width="800px"/>
+<figure><img src="/post/remote_contoroller_mqtt/dump_sample.png"
+    alt="サンプルコード取得" width="800px">
 </figure>
 
 <p>M5GOでは、受信するPIN番号が36、送信するPIN番号が26番です。なので、受信するPIN番号を36に変更する必要があります。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">uint16_t</span> kRecvPin <span style="color:#f92672">=</span> <span style="color:#ae81ff">36</span>;
 </span></span></code></pre></div><p>変更したら、コンパイル＋書き込みを行い、シリアルモニターを開いてIRセンサーに向けてリモコンのボタンを押しデータ受信させます。今回は「ON・OFF」、「明るく」、「暗い」のデータを受信します。赤外線データを受信すると以下のようなにシリアルモニタに表示されるので<code>uint16_t raw_data[85]</code>のメモを取ります。
-<figure><img src="dump_result.png"
-         alt="受信結果" width="800px"/>
+<figure><img src="/post/remote_contoroller_mqtt/dump_result.png"
+    alt="受信結果" width="800px">
 </figure>
 </p>
 <h2 id="33送信編">3.3．送信編</h2>
@@ -136,23 +136,23 @@ Aボタンが「切/入」、Bボタンが「明るく」、Cボタンが「暗�
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>() {
 </span></span><span style="display:flex;"><span>  <span style="color:#75715e">// M5Stackの初期化
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  M5.begin();
-</span></span><span style="display:flex;"><span>  M5.Power.begin();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  M5.<span style="color:#a6e22e">begin</span>();
+</span></span><span style="display:flex;"><span>  M5.Power.<span style="color:#a6e22e">begin</span>();
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 26番ピンの設定
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  pinMode(ir_send_pin, OUTPUT);
-</span></span><span style="display:flex;"><span>  digitalWrite(ir_send_pin, <span style="color:#ae81ff">1</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">pinMode</span>(ir_send_pin, OUTPUT);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">digitalWrite</span>(ir_send_pin, <span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loop</span>() {
-</span></span><span style="display:flex;"><span>  M5.update();
+</span></span><span style="display:flex;"><span>  M5.<span style="color:#a6e22e">update</span>();
 </span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 各ボタンが押された際に、それぞれの赤外線データを送信する
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (M5.BtnA.wasPressed()) {
-</span></span><span style="display:flex;"><span>    irsend.sendRaw(on_off, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
-</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnB.wasPressed()) {
-</span></span><span style="display:flex;"><span>    irsend.sendRaw(brightly, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
-</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnC.wasPressed()) {
-</span></span><span style="display:flex;"><span>    irsend.sendRaw(dark, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (M5.BtnA.<span style="color:#a6e22e">wasPressed</span>()) {
+</span></span><span style="display:flex;"><span>    irsend.<span style="color:#a6e22e">sendRaw</span>(on_off, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnB.<span style="color:#a6e22e">wasPressed</span>()) {
+</span></span><span style="display:flex;"><span>    irsend.<span style="color:#a6e22e">sendRaw</span>(brightly, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (M5.BtnC.<span style="color:#a6e22e">wasPressed</span>()) {
+</span></span><span style="display:flex;"><span>    irsend.<span style="color:#a6e22e">sendRaw</span>(dark, DATA_SIZE, TRANSMIT_CAPTURE_SIZE);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><hr>
@@ -373,7 +373,7 @@ MQTTで通信する実装は以下の通りです。</p>
 <li><a href="https://mqtt.org">https://mqtt.org</a></li>
 </ul>
 
-    <h4><a href="https://DefiosLab.github.io"></a></h4>
+    <h4><a href="https://DefiosLab.github.io/"></a></h4>
 </div>
 
 
@@ -386,7 +386,7 @@ MQTTで通信する実装は以下の通りです。</p>
 <a href="http://defios.jp" target="_blank">
     Defios Inc.
 </a>
-<span id="thisyear">2024</span>
+<span id="thisyear">2025</span>
 
 
 </p>

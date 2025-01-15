@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io//favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io//favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io//favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io//favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io//favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io//favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io//favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io//favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io//favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io//favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io//favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io//favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io//favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io//favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io//favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io/">
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io/">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>M5stack Module LLMで好きなLLMモデルを動かす - Wed, Jan 15, 2025</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 青木 心路</p>
+    
+
+    
+
+    <h1 id="0-宣伝">0. 宣伝</h1>
+<p>この記事はすっかり年明けも過ぎましたが「M5Stack Module LLM Advent Calendar 2024」に空きがあったので参加している記事です。</p>
+<div class="mj-linkcard" style="background-color: #ffffff; width: 100%;max-width: 600px;display: flex;border: 1px solid #999;border-radius: 0.3rem;">
+<div class="mj-imagebox" style="width: 120px;flex-shrink: 0;padding: 5px;">
+<a class="mj-blogcard_al" href="" target="_blank" style="width: 100%;">
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fcdn.qiita.com%2Fassets%2Fpublic%2Fadvent_calendar%2Fogp%2Fcalendar-ogp-background-c24e7570f8dc39b6f4e1323cbd83d11f.jpg?ixlib=rb-4.0.0&amp;w=1200&amp;mark-x=142&amp;mark-y=128&amp;mark64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjAuMCZ0eHQtYWxpZ249bGVmdCUyQ3RvcCZ0eHQtY29sb3I9JTIzRkZGRkZGJnR4dC1mb250PUhpcmFnaW5vJTIwU2FucyUyMFc2JnR4dC1zaXplPTU2JnR4dD1NNVN0YWNrJTIwTW9kdWxlJTIwTExNJTIwJTIwQWR2ZW50JTIwQ2FsZW5kYXIlMjAyMDI0Jnc9OTE2Jmg9MzU2JnM9ZTk2YTA0ZjgxMmNhYjM3NGRiM2JmZmI3ODM1OTU4YmM&amp;blend-mode=normal&amp;blend-x=142&amp;blend-y=491&amp;blend64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjAuMCZ0eHQtYWxpZ249bGVmdCUyQ3RvcCZ0eHQtY29sb3I9JTIzRkZGRkZGJnR4dC1mb250PUhpcmFnaW5vJTIwU2FucyUyMFc2JnR4dC1zaXplPTM2JnR4dD0lNDBubm4xMTIzNTgmdz05MTYmcz04OTI1Mzc3NzU0YjE5MWMwOTJlYWNlYmQ3MjYyMzhmMw&amp;s=ee0574e6a2ef2eb2e08e0eff3b18069b" alt="" style="width: 100%;max-height: 120px;"></a></div>
+<div class="mj-textbox" style="overflow: hidden;flex-grow: 1;padding: 2px;">
+<a class="mj-blogcard_al" href="" target="_blank" style="width: 100%;">
+<div class="mj-title" style="font-weight: bold;padding-bottom: 2px;text-align: left;">
+<font color="#666">M5Stack Module LLM  - Qiita Advent Calendar 2024 - Qiita</font></div></a>
+<div class="mj-desc" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-size: 0.6em;color: #868686;text-align: left;">
+Calendar page for Qiita Advent Calendar 2024 regarding M5Stack Module LLM .</div>
+<div class="mj-generated" style="font-size: 0.1em;color: #ffffff;text-align: right;">Generated by
+<a class="mj-linkcard_a" id="mj-generated_a" href="https://blogmanju.com" target="_blank" rel="noopener noreferrer"><font color="#ffffff">Mj </font></a></div>
+<div class="mj-site_name" style="font-size: 0.8em;color: #666;text-align: right;">
+<a class="mj-linkcard_siteurl" href="
+" target="_blank" style="display: block;" rel="noopener noreferrer">
+<font color="#666"></font></a></div>
+</div></div>
+<style>
+.mj-linkcard a {
+text-decoration: none;
+}
+#mj-generated_a:link, 
+#mj-generated_a:visited, 
+#mj-generated_a:hover, 
+#mj-generated_a:active {
+  color: #ffffff;
+}
+.mj-imagebox img {
+    display: block;
+    height: auto;
+    margin: 0 auto;
+}
+.mj-linkcard:hover{
+	opacity: 0.8!important;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all  0.3s ease;
+}
+.mj-linkcard:hover img{
+	opacity: 0.8!important;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all  0.3s ease;
+}
+</style>
+</p>
+<p>弊社ではM5stack Module LLM moduleの発売前検証を担当させていただきましたのでその時の知見を記事にしました！</br>
+そんな仕事もあるDefiosでは一緒に働いてくれるアルバイトを大募集中です！</br>
+IoTxAI (エッジAI)で世の中の課題を一緒に解決していきましょう！！</br></p>
+<div class="mj-linkcard" style="background-color: #ffffff; width: 100%;max-width: 600px;display: flex;border: 1px solid #999;border-radius: 0.3rem;">
+    <div class="mj-imagebox" style="width: 120px;flex-shrink: 0;padding: 5px;display: flex;align-items: center;justify-content: center;">
+        <a class="mj-blogcard_al" href="https://defios.jp/iotxai%e9%96%8b%e7%99%ba%e3%82%a8%e3%83%b3%e3%82%b8%e3%83%8b%e3%82%a2/" target="_blank" style="width: 100%;">
+            <img src="https://defios.jp/wp-content/uploads/2024/05/defioslogo.png" alt="Defios株式会社 | ICT技術の価値を最大化する -" style="width: 100%;max-height: 120px;">
+        </a>
+    </div>
+    <div class="mj-textbox" style="overflow: hidden;flex-grow: 1;padding: 2px;">
+        <a class="mj-blogcard_al" href="https://defios.jp/iotxai%e9%96%8b%e7%99%ba%e3%82%a8%e3%83%b3%e3%82%b8%e3%83%8b%e3%82%a2/" target="_blank" style="width: 100%;">
+            <div class="mj-title" style="font-weight: bold;padding-bottom: 2px;text-align: left;">
+                <font color="#666">【ハッカソン経験者優遇!!】IoTxAI開発エンジニア - Defios株式会社 | ICT技術の価値を最大化する</font>
+            </div>
+        </a>
+        <div class="mj-desc" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-size: 0.6em;color: #868686;text-align: left;">
+            エッジAI分野で開発業務を行っていただきます。 新しい技術や未知の分野に挑戦することが好きな方にお勧めです！
+        </div>
+        <div class="mj-generated" style="font-size: 0.1em;color: #ffffff;text-align: right;">Generated by
+            <a class="mj-linkcard_a" id="mj-generated_a" href="https://blogmanju.com" target="_blank" rel="noopener noreferrer"><font color="#ffffff">Mj </font></a>
+        </div>
+        <div class="mj-site_name" style="font-size: 0.8em;color: #666;text-align: right;">
+            <a class="mj-linkcard_siteurl" href="https://defios.jp" target="_blank" style="display: block;" rel="noopener noreferrer">
+                <font color="#666">Defios株式会社 | ICT技術の価値を最大化する -</font>
+            </a>
+        </div>
+    </div>
+</div>
+<style>
+.mj-linkcard a {
+    text-decoration: none;
+}
+#mj-generated_a:link, 
+#mj-generated_a:visited, 
+#mj-generated_a:hover, 
+#mj-generated_a:active {
+    color: #ffffff;
+}
+.mj-imagebox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mj-imagebox img {
+    display: block;
+    height: auto;
+    max-height: 120px;
+    margin: 0 auto;
+}
+.mj-linkcard:hover {
+    opacity: 0.8 !important;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.mj-linkcard:hover img {
+    opacity: 0.8 !important;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+</style>
+</p>
+以上、ここまで 代表取締役 Taisyo が代筆。
+</p>
+<h1 id="1-はじめに">1. はじめに</h1>
+<p>本記事では、M5stack Module LLM上で任意のLLMモデルを実行する方法について解説します。M5stack Module LLMは、オフラインで動作するLLM推論モジュールで、AX630CというNPU内蔵SoCを搭載しています。細かい仕様は<a href="https://docs.m5stack.com/ja/module/Module-LLM">公式サイト</a>からご確認ください。標準でQwen2.5-0.5Bモデルがプリインストールされていますが、今回はTinyLlama-1.1B-Chat-v1.0を実行する手順を解説します。本記事が、M5stack Module LLMを活用したい方の参考になれば幸いです。</p>
+<h1 id="2開発環境">2.　開発環境</h1>
+<ol>
+<li>使用した機材、環境は以下になります。</li>
+</ol>
+<ul>
+<li>端末 : M5stack Module LLM</li>
+<li>環境 : Linux</li>
+</ul>
+<p><a href="https://docs.m5stack.com/ja/module/Module-LLM"><img src ="https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/docs/products/module/Module%20LLM/4.webp" width="20%"></a></p>
+<h1 id="3-pulsar2の環境構築">3. pulsar2の環境構築</h1>
+<ul>
+<li>まず自分のPC上でpulsar2ツールを使用してonnxモデルをaxmodelモデル(Module LLMで動作するモデル形式)に変換する必要があります。</li>
+</ul>
+<ol>
+<li>
+<p>1.<a href="https://drive.google.com/drive/folders/1gFpQ5WfaM5evyFWtAvC3zOiYRe-y1AqC">こちらのGoogle Driveのリンク</a>からax_pulsar2_${version}.tar.gzをダウンロードします。</p>
+</li>
+<li>
+<p>2.以下のコマンドを実行してDockerイメージをローカル環境にロードします。本記事では、docker環境が構築済みであることを前提に進めていきます。docker環境が未構築の場合は<a href="https://pulsar2-docs.readthedocs.io/en/latest/user_guides_quick/quick_start_prepare.html#install-the-docker-development-environment:~:text=%2C%20Windows.-,3.1.%20Install%20the%20Docker%20development%20environment,%EF%83%81,-The%20Docker%20development">こちらのdocument</a>を参照してください。</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    sudo docker load -i ax_pulsar2_<span style="color:#e6db74">${</span>version<span style="color:#e6db74">}</span>.tar.gz
+</span></span></code></pre></div><ol start="3">
+<li>3.ロードしたDockerイメージからコンテナを作成、コンテナ内で下記コマンドを実行し正常に環境構築できているか確認します。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    pulsar2 version
+</span></span></code></pre></div><ol start="4">
+<li>4.期待される結果</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    version: 3.2
+</span></span><span style="display:flex;"><span>    commit: 48a1d3f9
+</span></span></code></pre></div><h1 id="4-tinyllamaのコンパイル">4. TinyLlamaのコンパイル</h1>
+<ul>
+<li>それではpulsar2を使用してTinyLlamaのコンパイルを行っていきます。</li>
+</ul>
+<ol>
+<li>1.以下のコマンドを実行してax-llm-buildを任意のディレクトリにクローンします</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    git clone https://github.com/AXERA-TECH/ax-llm-build.git
+</span></span></code></pre></div><ol start="2">
+<li>2.以下のコマンドを実行してdockerコンテナを起動します</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    sudo docker run -it --net host --rm -v $PWD:/data pulsar2:3.2
+</span></span></code></pre></div><ol start="3">
+<li>3.Hugging Face Hubからモデルをダウンロードするためにhuggingface_hubをinstallします</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    pip install -U huggingface_hub
+</span></span></code></pre></div><ol start="4">
+<li>4.ax-llm-buildフォルダに移動してhuggingfaceからTinyLlamaをダウンロードします</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    huggingface-cli download --resume-download TinyLlama/TinyLlama-1.1B-Chat-v1.0 --local-dir TinyLlama/TinyLlama-1.1B-Chat-v1.0 
+</span></span></code></pre></div><ol start="5">
+<li>5.以下のコマンドを実行してTinyLlamaをコンパイルします。output_pathに出力結果が格納され,実行から完了まで30分以上かかります。Module LLMにはAX630Cが搭載されていますが、AX630CはAX620Eの系統に含まれるので &ndash;chipはAX620Eに設定しています。
+<a href="https://github.com/AXERA-TECH/ax-samples/blob/main/docs/compile.md">参考</a></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    pulsar2 llm_build --input_path TinyLlama/TinyLlama-1.1B-Chat-v1.0/ --output_path TinyLlama/TinyLlama-1.1B-Chat-v1.0-output/ --kv_cache_len <span style="color:#ae81ff">1023</span> --hidden_state_type bf16 --prefill_len <span style="color:#ae81ff">128</span> --chip AX620E
+</span></span></code></pre></div><ol start="6">
+<li>6.fp32_to_bf16とembed_process.shファイルに実行権限を追加します</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    chmod +x ./tools/fp32_to_bf16
+</span></span><span style="display:flex;"><span>    chmod +x ./tools/embed_process.sh
+</span></span></code></pre></div><ol start="7">
+<li>7.以下のコマンドを実行して埋め込みファイルの抽出と最適化を行います。fp32のデータをbf16に変換することでモデルサイズを削減しつつ精度を維持することが可能です。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    ./tools/embed_process.sh TinyLlama/TinyLlama-1.1B-Chat-v1.0 TinyLlama/TinyLlama-1.1B-Chat-v1.0-output/
+</span></span></code></pre></div><h1 id="5-m5stack-module-llmでの実行準備">5. M5stack Module LLMでの実行準備</h1>
+<ul>
+<li>今回はPCとModule LLMをUSBケーブルで接続し、adbコマンドを使用してModule LLM内にアクセスしました。</li>
+</ul>
+<ol>
+<li>
+<p>1.Module LLM内の任意のディレクトリにTinyLlamaフォルダを作成して移動します。</p>
+</li>
+<li>
+<p>2.output-pathで指定した出力ファイルが入ったフォルダを<code>adb push</code> コマンドを使用してPCからModule LLMのTinyLlamaフォルダ内に転送します。</p>
+</li>
+<li>
+<p>3.TinyLlama-1.1B-Chat-v1.0フォルダ(huggingfaceからダウンロードしてきたフォルダ)の中にあるtokenizer.modelというファイルを手順2.と同じ方法でModule LLMに転送します。</p>
+</li>
+<li>
+<p>4.pulsar2の開発者の方が公開されている<a href="https://drive.google.com/drive/folders/11aRxsFqJfGXhFMlInudj3Bi8SR-08TXl">ModelZooのリンク</a>からModelZoo/LLM/Qwen/qwen2.5-0.5b-prefill-ax630c.zipをダウンロードします。解凍後にqwen2.5-0.5b-prefill-ax630c/main_prefillというファイルを手順2.と同じ方法でModule LLMに転送します</p>
+</li>
+<li>
+<p>4.run_tinyllama_ax630c.shというファイルを作成します。</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    touch run_tinyllama_ax630c.sh
+</span></span></code></pre></div><ol start="5">
+<li>5.お好きな方法で作成したshファイルの中身を下記のように記述します。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    ./main_prefill <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --template_filename_axmodel <span style="color:#e6db74">&#34;TinyLlama-1.1B-Chat-v1.0-output/llama_p128_l%d_together.axmodel&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --axmodel_num <span style="color:#ae81ff">22</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --filename_post_axmodel <span style="color:#e6db74">&#34;TinyLlama-1.1B-Chat-v1.0-output/llama_post.axmodel&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --filename_tokens_embed <span style="color:#e6db74">&#34;TinyLlama-1.1B-Chat-v1.0-output/model.embed_tokens.weight.bfloat16.bin&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --eos <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --live_print <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --continue <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --prompt <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><ol start="6">
+<li>6.現時点でTinyLlamaフォルダの中身は下記のようになっています</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    TinyLlama
+</span></span><span style="display:flex;"><span>        - TinyLlama-1.1B-Chat-v1.0-output
+</span></span><span style="display:flex;"><span>        - run_tinyllama_ax630c.sh
+</span></span><span style="display:flex;"><span>        - tokenizer.model
+</span></span><span style="display:flex;"><span>        - main_prefill
+</span></span></code></pre></div><h1 id="6-m5stack-module-llmでの実行">6. M5stack Module LLMでの実行</h1>
+<ul>
+<li>TinyLlamaフォルダでrun_tinyllama_ax630c.shを実行したらTinyLlamaがModule LLM上で動作します</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    ./run_tinyllama_ax630c.sh
+</span></span></code></pre></div><ul>
+<li>下記が実行例になります</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    Type <span style="color:#e6db74">&#34;q&#34;</span> to exit, Ctrl+c to stop current running
+</span></span><span style="display:flex;"><span>    &gt;&gt; who are you?
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>I<span style="color:#f92672">][</span>                             Run<span style="color:#f92672">][</span> 484<span style="color:#f92672">]</span>: ttft: 1176.21 ms
+</span></span><span style="display:flex;"><span>    I am a machine learning model trained on a large dataset of text data. I can analyze and understand text, and provide insights and recommendations based on the text.
+</span></span></code></pre></div><h1 id="7-おわりに">7. おわりに</h1>
+<ul>
+<li>今回はM5stack Module LLMでTinyLlama-1.1B-Chat-v1.0を動かす手順を解説しました。<a href="https://github.com/AXERA-TECH/ax-llm#:~:text=2%20%E5%AE%9E%E6%B5%8B%E3%80%82-,%E5%B7%B2%E9%AA%8C%E8%AF%81%E8%BF%87%E7%9A%84%E6%A8%A1%E5%9E%8B,-Qwen1.5%2D0.5B/1.8B">公式リポジトリ</a>に検証済みモデルがリストアップされているため、新たなモデルの導入時に参考にしてください。</li>
+<li>では、良きM5開発ライフを!!!</li>
+</ul>
+
+    <h4><a href="https://DefiosLab.github.io/"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2025</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
