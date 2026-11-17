@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="jp"><head>
+    <title>Defios Lab.</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000084" />
+
+    <link rel="apple-touch-icon" sizes="57x57"   href="https://DefiosLab.github.io//favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"   href="https://DefiosLab.github.io//favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"   href="https://DefiosLab.github.io//favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"   href="https://DefiosLab.github.io//favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://DefiosLab.github.io//favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://DefiosLab.github.io//favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://DefiosLab.github.io//favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://DefiosLab.github.io//favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://DefiosLab.github.io//favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://DefiosLab.github.io//favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"    href="https://DefiosLab.github.io//favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"    href="https://DefiosLab.github.io//favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"    href="https://DefiosLab.github.io//favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://DefiosLab.github.io//favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://DefiosLab.github.io//favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="https://DefiosLab.github.io/">
+    
+    
+    
+    
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6NF2V0488"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-F6NF2V0488");
+    </script>
+    
+    
+    
+    
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+            <a class="brand" href="https://DefiosLab.github.io/">Defios Lab.</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+                    
+                        
+                            <li>
+                                <a href="/about/">
+                                    
+                                    <span>About</span>
+                                </a>
+                            </li>
+                        
+                    
+                        
+                            <li>
+                                <a href="/post/">
+                                    
+                                    <span>Archives</span>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav><div id="content" class="container">
+
+<div class="row-fluid navmargin">
+    <div class="page-header">
+        <h1>Irodori-TTSをIntel NPUで動かす - Tue, Nov 17, 2026</h1>
+    </div>
+    
+    <p style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;'>Writer: 西村 望久</p>
+    
+
+    
+    <p class="lead">Irodori-TTSをIntel NPU向けに移植したので、実行方法などを紹介します。</p>
+    
+
+    <h1 id="1-はじめに">1. はじめに</h1>
+<p>最近のIntelのプロセッサには、AI処理向けのNPUが搭載されています。しかし、そのNPUを積極的に活用しているという話はあまり聞かず、せっかく載っているのに持て余している印象があります。</p>
+<p>今回、ノートPC1台でLLMとTTS(音声合成)を同時に動かしたい場面があり、LLMはGPU、TTSはNPUという分担にすれば、うまく動かせるのではないかと考え、Irodori-TTSをIntel NPUで動かせるようにしたのでその実行方法などを紹介します。</p>
+<div class="iframely-embed"><div class="iframely-responsive" style="height: 140px; padding-bottom: 0;"><a href="https://github.com/DefiosLab/Irodori-TTS" data-iframely-url="https://iframely.net/0re7uzoW?card=small"></a></div></div><script async src="https://iframely.net/embed.js"></script>
+<br>
+<hr>
+<h1 id="21-irodori-ttsの実行">2.1. Irodori-TTSの実行</h1>
+<p>まずはリポジトリをcloneし、NPU向けの依存関係をインストールします。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/DefiosLab/Irodori-TTS.git
+</span></span><span style="display:flex;"><span>cd Irodori-TTS
+</span></span><span style="display:flex;"><span>uv sync --extra npu
+</span></span></code></pre></div><p>次にOpenVINOからNPUが認識されているかを確認します。出力にNPUが含まれていればOKです。もし含まれていなければIntel NPUのドライバのインストールを確認してください。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv run --no-sync python -c <span style="color:#e6db74">&#34;import openvino as ov; print(ov.Core().available_devices)&#34;</span>
+</span></span></code></pre></div><p>あとは、通常のIrodori-TTSと同様に推論を実行することができます。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv run --no-sync python infer.py <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --hf-checkpoint Aratako/Irodori-TTS-v4.1-Small <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --model-device npu <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --codec-device npu <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --text <span style="color:#e6db74">&#34;こんにちは、私はAIです。これは音声合成のテストです。&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --no-ref <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --output-wav outputs/sample_npu.wav
+</span></span></code></pre></div><p><code>--model-device npu</code>で音声生成モデル、<code>--codec-device npu</code>で音声コーデックをNPUに割り当てることができ、それぞれ個別に指定できるためどちらかのみをNPUで処理することも可能です。</p>
+<p>初回実行時はOpenVINOへのモデルの変換やコンパイルが行われるため実行に時間がかかります。その他詳細については<a href="https://github.com/DefiosLab/Irodori-TTS#intel-npu-inference-openvino">README</a>を参照してください。</p>
+<h1 id="22-irodori-tts-serverの実行">2.2. Irodori-TTS-Serverの実行</h1>
+<p>Irodori-TTSには、OpenAI互換の音声生成APIを提供する<a href="https://github.com/Aratako/Irodori-TTS-Server">Irodori-TTS-Server</a>があります。こちらもパッチを適用することでNPUで動かせるため、その方法を紹介します。</p>
+<p>まずは、Irodori-TTSとIrodori-TTS-Serverを同じディレクトリに配置し、Server側にパッチを適用します。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/Aratako/Irodori-TTS-Server.git
+</span></span><span style="display:flex;"><span>cd Irodori-TTS-Server
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git switch --detach 61012c760f22f7b4a6c21c5c5f8f9e148120b6f9
+</span></span><span style="display:flex;"><span>git apply ../Irodori-TTS/docs/patches/tts-server-npu.patch
+</span></span><span style="display:flex;"><span>uv sync --extra npu
+</span></span></code></pre></div><p>続いて、<code>.env.example</code>をコピーして<code>.env</code>を作成し以下の設定に変更します。<code>IRODORI_PRELOAD=true</code>は必須ではありませんが、モデルのダウンロードやコンパイルをサーバ起動時に完了させるため<code>true</code>にしておくことを推奨します。また、fp32はCPU側の設定で、NPU内部の浮動小数点演算はfp16です。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>IRODORI_HF_CHECKPOINT<span style="color:#f92672">=</span>Aratako/Irodori-TTS-v4.1-Small
+</span></span><span style="display:flex;"><span>IRODORI_MODEL_DEVICE<span style="color:#f92672">=</span>npu
+</span></span><span style="display:flex;"><span>IRODORI_CODEC_DEVICE<span style="color:#f92672">=</span>npu
+</span></span><span style="display:flex;"><span>IRODORI_MODEL_PRECISION<span style="color:#f92672">=</span>fp32
+</span></span><span style="display:flex;"><span>IRODORI_CODEC_PRECISION<span style="color:#f92672">=</span>fp32
+</span></span><span style="display:flex;"><span>IRODORI_COMPILE_MODEL<span style="color:#f92672">=</span>false
+</span></span><span style="display:flex;"><span>IRODORI_PRELOAD<span style="color:#f92672">=</span>true
+</span></span></code></pre></div><p>あとはサーバを起動すれば、OpenAI互換のAPIを使用して音声合成ができます。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv run --no-sync python -m irodori_openai_tts --host 0.0.0.0 --port <span style="color:#ae81ff">8088</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://localhost:8088/v1/audio/speech <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-d <span style="color:#e6db74">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;model&#34;: &#34;irodori-tts&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;input&#34;: &#34;こんにちは。これはIrodori-TTSのAPIテストです。&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;voice&#34;: &#34;none&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;response_format&#34;: &#34;wav&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>--output speech.wav
+</span></span></code></pre></div><p>詳細なセットアップ手順や注意点は、<a href="https://github.com/DefiosLab/Irodori-TTS/blob/main/docs/server_npu.md">Irodori-TTS-Server on Intel NPU</a>を参照してください。</p>
+<hr>
+<h1 id="3-移植と高速化の内容">3. 移植と高速化の内容</h1>
+<p>今回はIntelのOpenVINOを使用し、PyTorchのモデルをOpenVINO形式に変換することでIntel NPU上で推論を実行するようにしました。</p>
+<p>ただし、モデルをそのまま変換するだけではうまく動かなかったり、十分な性能が出ないためいくつかの調整を行いました。その変更内容を軽く紹介したいと思います。</p>
+<p>まず、今回の実装では、入力テンソルの形状を固定してコンパイルする必要がありますが、今回使うモデルは入力テキストなどによって入力長がかわるため、入力長が変わるたびにコンパイルし直すと時間がかかってしまいます。そこで、入力長をいくつかの固定サイズ(Bucket)にわけ、それぞれのサイズでモデルをあらかじめコンパイルしておく方式を採用しました。これにより、入力長が異なっていてもコンパイル済みのモデルを使い回すことができ、毎回のコンパイルを避けて効率的に推論できるようにしました。</p>
+<p>次に、NPUで効率よく推論するために、モデル内の演算も一部変更しています。
+例えばDACVAEで使われているSnake活性化関数にはsin^2の計算が含まれています。
+一般に、NPUはsinのような三角関数の計算が苦手なことがあり、LUT(Look-Up Table)や多項式近似を使って計算する方法が用いられます。
+今回は、指定した範囲内での最大誤差を最小化するMinimax近似を使用し、sin^2の計算を主に乗算と加算で処理できる形に置き換えました。</p>
+<p>また、Intel NPU向けのコンパイラには、拡張畳み込みや転置畳み込みを通常の畳み込みなどに変換する処理が実装されています。ただし、変換後の演算構成によって実行効率が変わるため、今回はこれらの演算の一部をあらかじめ通常の畳み込みを組み合わせた形に書き換え、実行効率の改善を行いました。
+NPU向けの実装は<a href="https://github.com/DefiosLab/Irodori-TTS/blob/main/irodori_tts/openvino_backend.py">openvino_backend.py</a>にまとまっていますので、細かな実装についてはそちらを参照してください。</p>
+<hr>
+<h1 id="4-実行速度">4. 実行速度</h1>
+<p>最後に、実際にIntel NPUでIrodori-TTSを動かしたときの実行速度を見ていきましょう。
+今回の測定には、Intel Core Ultra 7 258Vを搭載したノートPCを使用しました。
+モデルは、Irodori-TTS-v4.1-Small、サンプリングステップ数40、参照音声なし、ウォーターマークありの設定で、入力テキストの長さを17〜146文字まで変化させ、それぞれ5回のウォームアップ後に5回測定し、その結果を使用しています。</p>
+<p>まずは、CPU、XPU(内蔵GPU)、NPUでの音声生成時間の比較です。</p>
+<figure><img src="/post/irodori_tts_npu/synthesis_time.png">
+</figure>
+
+<p>NPUでは、17文字の入力から3.68秒の音声を約1.63秒で、146文字の入力から27.2秒の音声を約9.68秒で生成できました。</p>
+<p>続いて、生成された音声の長さに対する実行時間の比率 (RTF: Real Time Factor)を見てみます。
+RTFは1.0を下まわればリアルタイムよりも高速に音声を生成できていることを意味します。</p>
+<figure><img src="/post/irodori_tts_npu/rtf.png">
+</figure>
+
+<p>今回のケースではNPUのRTFはいずれも0.5以下となっていることがわかります。</p>
+<p>なお、今回の測定では、NPU向けモデルの準備に約18分かかっており、この時間はコンパイル結果のキャッシュ状態によっても変わるため、上記の推論時間とは分けて考える必要があります。</p>
+<hr>
+<h1 id="5-おわりに">5. おわりに</h1>
+<p>今回はIrodori-TTSをIntel NPUに移植し、リアルタイムを上回る速度で音声生成できることが確認できました。
+この記事が、NPUを音声生成などに活用する際の参考になれば幸いです。</p>
+
+    <h4><a href="https://DefiosLab.github.io/"></a></h4>
+</div>
+
+
+        </div><footer style='font-family: DOS, DOS_JP, Monaco, Menlo, Consolas, "Courier New", monospace;', class="container">
+    <hr class="soften">
+    <p>
+    ICT技術の価値を最大化する | 
+
+&copy; 
+<a href="http://defios.jp" target="_blank">
+    Defios Inc.
+</a>
+<span id="thisyear">2026</span>
+
+
+</p>
+    <p class="text-center">
+        
+        
+        
+        
+        
+    </p>
+</footer>
+
+</body><link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap-386.js"></script>
+<script src="/js/bootstrap-transition.js"></script>
+<script src="/js/bootstrap-alert.js"></script>
+<script src="/js/bootstrap-modal.js"></script>
+<script src="/js/bootstrap-dropdown.js"></script>
+<script src="/js/bootstrap-scrollspy.js"></script>
+<script src="/js/bootstrap-tab.js"></script>
+<script src="/js/bootstrap-tooltip.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/bootstrap-button.js"></script>
+<script src="/js/bootstrap-collapse.js"></script>
+<script src="/js/bootstrap-carousel.js"></script>
+<script src="/js/bootstrap-typeahead.js"></script>
+<script src="/js/bootstrap-affix.js"></script>
+<script>
+    _386 = { 
+        fastLoad: false ,
+        onePass: false , 
+        speedFactor: 3 
+    };
+
+    
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+</html>
